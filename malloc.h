@@ -18,7 +18,7 @@
 
 # define TINY 128
 # define SMALL 4096
-# define BUCKETS 128
+# define BUCKETS 4096
 
 # define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
 

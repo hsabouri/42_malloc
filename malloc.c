@@ -49,7 +49,7 @@ void	*allocate(t_pool *pool, size_t size, size_t bucketsize)
 		i++;
 		if (i == pool->buckets)
 		{
-			if (pool->next != NULL)
+			if (pool->next == NULL)
 				pool->next = buildpool(pool->buckets, bucketsize,\
 					pool->buckets * bucketsize);
 			pool = pool->next;

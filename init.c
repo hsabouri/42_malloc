@@ -17,6 +17,7 @@ t_pool			*buildpool(size_t buckets, size_t bucketsize, size_t poolsize)
 	t_pool	*pool;
 	size_t	i;
 
+	write(1, "NEW POOL\n", 9);
 	pool = (t_pool *)mmap(NULL, sizeof(t_pool), MMAP_ARGS);
 	pool->buckets = buckets;
 	pool->mem = (void *)mmap(NULL, poolsize, MMAP_ARGS);
@@ -52,7 +53,7 @@ static t_env	*set_env(void)
 	env.tinysize = poolsize(env.pagesize, BUCKETS, TINY);
 	env.smallsize =	poolsize(env.pagesize, BUCKETS, SMALL);
 	env.tiny = buildpool(BUCKETS, TINY, env.tinysize);
-	env.small = buildpool(BUCKETS, TINY, env.smallsize);
+	env.small = buildpool(BUCKETS, SMALL, env.smallsize);
 	env.large = NULL;
 	res = (t_env *)mmap(NULL, sizeof(t_env), MMAP_ARGS);
 	*res = env;
