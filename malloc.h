@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/03 13:51:17 by hsabouri          #+#    #+#             */
-/*   Updated: 2017/10/01 19:04:19 by hsabouri         ###   ########.fr       */
+/*   Updated: 2017/10/08 15:03:19 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct	s_buck
 
 typedef struct	s_pool
 {
+	size_t			free;
 	size_t			buckets;
 	t_buck			*bucks;
 	struct s_pool	*next;

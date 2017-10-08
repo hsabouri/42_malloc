@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/03 14:49:14 by hsabouri          #+#    #+#             */
-/*   Updated: 2017/10/01 19:04:32 by hsabouri         ###   ########.fr       */
+/*   Updated: 2017/10/08 15:29:32 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	*alloclarge(t_env *env, size_t size)
 	t_pool* current;
 
 	finalsize = (size % env->pagesize != 0) ?
-			((size / env->pagesize) + 1) * env->pagesize : size;
+		((size / env->pagesize) + 1) * env->pagesize : size;
 	large = buildpool(1, finalsize, finalsize);
-
+	large->bucks[0].size = size;
 	if (env->large == NULL)
 		env->large = large;
 	else
@@ -44,10 +44,11 @@ void	*allocate(t_pool *pool, size_t size, size_t bucketsize)
 		if (pool->bucks[i].size == 0)
 		{
 			pool->bucks[i].size = size;
+			pool->free -= 1;
 			return (pool->bucks[i].mem);
 		}
 		i++;
-		if (i == pool->buckets)
+		if (i == pool->buckets || pool->free == 0)
 		{
 			if (pool->next == NULL)
 				pool->next = buildpool(pool->buckets, bucketsize,\

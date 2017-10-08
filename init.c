@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/30 15:40:03 by hsabouri          #+#    #+#             */
-/*   Updated: 2017/10/01 17:53:45 by hsabouri         ###   ########.fr       */
+/*   Updated: 2017/10/08 15:03:47 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_pool			*buildpool(size_t buckets, size_t bucketsize, size_t poolsize)
 	write(1, "NEW POOL\n", 9);
 	pool = (t_pool *)mmap(NULL, sizeof(t_pool), MMAP_ARGS);
 	pool->buckets = buckets;
+	pool->free = buckets;
 	pool->mem = (void *)mmap(NULL, poolsize, MMAP_ARGS);
 	pool->next = NULL;
 	pool->bucks = (t_buck *)mmap(NULL, sizeof(t_buck) * buckets, MMAP_ARGS);
