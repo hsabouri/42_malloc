@@ -5,52 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/09/03 13:51:17 by hsabouri          #+#    #+#             */
-/*   Updated: 2017/10/08 15:03:19 by hsabouri         ###   ########.fr       */
+/*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
+/*   Updated: 2018/01/04 15:48:20 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MALLOC_H
 # define MALLOC_H
-
-# include <sys/mman.h>
 # include <unistd.h>
+# include <sys/mman.h>
+//# include "libft.h"
 
 # define TINY 128
 # define SMALL 4096
 # define BUCKETS 4096
 
-# define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
+# define MMAP(size) mmap(NULL,size,0x01|0x02,0x1000|0x0002,-1,0)
 
-typedef struct	s_buck
+typedef struct  s_bucket
 {
-	size_t			size;
-	void			*mem;
-}				t_buck;
+    void    *mem;
+    size_t  size;
+    size_t  max;
+}               t_bucket;
 
-typedef struct	s_pool
+typedef struct  s_pool
 {
-	size_t			free;
-	size_t			buckets;
-	t_buck			*bucks;
-	struct s_pool	*next;
-	void			*mem;
-}				t_pool;
+    struct s_pool   *next;
+    t_bucket        *content;
+    size_t          last;
+    size_t          nbuckets;
+    size_t          sbucket;
+    void            *mem;
+}               t_pool;
 
-typedef struct	s_env
+# ifdef HISTORY
+
+#  define HIST_MALLOC 2
+#  define HIST_ALLOC 1
+#  define HIST_REALLOC 0
+#  define HIST_FREE -1
+
+typedef struct  s_hist
 {
-	size_t	tinysize;
-	size_t	smallsize;
-	size_t	pagesize;
-	t_pool	*tiny;
-	t_pool	*small;
-	t_pool	*large;
-}				t_env;
+    int             type;
+    size_t          size;
+    void            *ptr;
+    struct s_hist   *next;
+}               t_hist;
 
+/*
+**  s_hist type precisions
+**      2 -> Malloc own operations  -> HIST_MALLOC
+**      1 -> alloc                  -> HIST_ALLOC
+**      0 -> realloc                -> HIST_REALLOC
+**      -1 -> free                  -> HIST_FREE
+**  if ptr == NULL, operation failed
+*/
 
-t_pool			*buildpool(size_t buckets, size_t bucketsize, size_t poolsize);
-size_t			poolsize(size_t pagesize, size_t buckets, size_t bucketsize);
-t_env			*get_env(void);
-void			*malloc(size_t size);
+# endif
+
+typedef struct  s_env
+{
+    size_t  stiny;
+    size_t  ssmall;
+    t_pool  *tiny;
+    t_pool  *small;
+    t_pool  *large;
+# ifdef HISTORY
+    t_hist  *history;
+# endif
+}               t_env;
+
+t_env           *getenv(void);
+
+void            *malloc(size_t size);
+void            free(void *ptr);
+
+void            putsystox(size_t addr);
+void            show_alloc_mem(void);
 
 #endif
