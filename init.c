@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/04 16:02:28 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/05 17:28:44 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ t_pool  *setpool(size_t nbuckets, size_t sbucket)
         pool->content[i].max = sbucket;
         i++;
     }
+#ifdef HISTORY
+	store(pool->mem, 2, sbucket * nbuckets);
+#endif
     return (pool);
 }
 

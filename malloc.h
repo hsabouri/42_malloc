@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/04 15:48:20 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/05 17:27:10 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@ typedef struct  s_pool
 
 # ifdef HISTORY
 
-#  define HIST_MALLOC 2
 #  define HIST_ALLOC 1
 #  define HIST_REALLOC 0
 #  define HIST_FREE -1
+#  define HIST_NEW_POOL 2
+#  define HIST_DEL_POOL -2
 
 typedef struct  s_hist
 {
@@ -56,10 +57,11 @@ typedef struct  s_hist
 
 /*
 **  s_hist type precisions
-**      2 -> Malloc own operations  -> HIST_MALLOC
-**      1 -> alloc                  -> HIST_ALLOC
-**      0 -> realloc                -> HIST_REALLOC
-**      -1 -> free                  -> HIST_FREE
+**      1 -> alloc			-> HIST_ALLOC
+**      0 -> realloc		-> HIST_REALLOC
+**      -1 -> free			-> HIST_FREE
+**		2 -> new pool		-> HIST_NEW_POOL
+**		-2 -> deleting pool	-> HIST_DEL_POOL
 **  if ptr == NULL, operation failed
 */
 
@@ -78,6 +80,7 @@ typedef struct  s_env
 }               t_env;
 
 t_env           *getenv(void);
+t_pool			*setpool(size_t nbuckets, size_t sbucket);
 
 void            *malloc(size_t size);
 void            free(void *ptr);
