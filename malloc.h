@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/05 17:27:10 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/06 18:31:55 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct  s_pool
     struct s_pool   *next;
     t_bucket        *content;
     size_t          last;
+	size_t			size;
     size_t          nbuckets;
     size_t          sbucket;
     void            *mem;
@@ -87,5 +88,7 @@ void            free(void *ptr);
 
 void            putsystox(size_t addr);
 void            show_alloc_mem(void);
+
+void	putstr(char *str); //REMOVE
 
 #endif

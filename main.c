@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 15:47:17 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/05 16:50:11 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/06 18:32:53 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,15 @@ char	*fillstr(char *dst, char l, size_t size)
 int main(void)
 {
 	char *test1;
+	char *test2;
+	int i = 0;
 
-	test1 = (char *)malloc(128000);
-	test1 = fillstr(test1, 'a', 128000);
-	putstr(test1);
+	while (i < 120000)
+	{
+		test1 = strdup("Hello");
+		test2 = strdup("Bonjour");
+		i++;
+	}
+	free(test1);
+	free(test2);
 }

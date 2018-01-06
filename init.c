@@ -6,26 +6,27 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/05 17:28:44 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/06 18:32:21 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_pool  *setpool(size_t nbuckets, size_t sbucket)
+t_pool  *setpool(size_t memsize, size_t sbucket)
 {
     t_pool  *pool;
     size_t  i;
     
     pool = (t_pool *)MMAP(sizeof(t_pool));
     pool->next = NULL;
-    pool->content = (t_bucket *)MMAP(sizeof(t_bucket) * nbuckets);
+    pool->content = (t_bucket *)MMAP(sizeof(t_bucket) * BUCKETS);
     pool->last = 0;
-    pool->nbuckets = nbuckets;
+	pool->size = memsize;
+    pool->nbuckets = BUCKETS;
     pool->sbucket = sbucket;
-    pool->mem = (void *)MMAP(sbucket * nbuckets);
+    pool->mem = (void *)MMAP(memsize);
     i = 0;
-    while (i < nbuckets)
+    while (i < BUCKETS)
     {
         pool->content[i].mem = pool->mem + i * sbucket;
         pool->content[i].size = 0;
@@ -33,22 +34,21 @@ t_pool  *setpool(size_t nbuckets, size_t sbucket)
         i++;
     }
 #ifdef HISTORY
-	store(pool->mem, 2, sbucket * nbuckets);
+	store(pool->mem, 2, memsize);
 #endif
+	putstr("NEW POOL\n");
     return (pool);
 }
 
 size_t  poolsize(size_t sbucket)
 {
-    size_t perfect;
-    size_t pagesize;
-    
-    pagesize = getpagesize();
-    perfect = sbucket * BUCKETS;
-    if (perfect % pagesize == 0)
-        return (perfect);
-    else
-        return (perfect + (perfect % pagesize) / sbucket);
+	size_t overflow;
+
+	overflow = sbucket * BUCKETS % getpagesize();
+	if (overflow == 0)
+		return (sbucket * BUCKETS);
+	else
+		return (sbucket * BUCKETS + getpagesize() * (overflow / getpagesize() + 1));
 }
 
 t_env   *setenv(void)

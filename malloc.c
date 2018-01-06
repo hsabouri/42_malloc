@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/05 17:58:06 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/06 18:32:00 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,15 @@ void	*alloc(t_pool *lst, size_t size)
 {
 	void	*res;
 
-	while (lst->next && lst->last == lst->nbuckets)
+	while (lst->next && lst->last == lst->nbuckets - 1)
 		lst = lst->next;
-	if (lst->next == NULL && lst->last == lst->nbuckets)
+	if (lst->next == NULL && lst->last == lst->nbuckets - 1)
 	{
-		lst->next = setpool(lst->nbuckets, lst->sbucket);
+		lst->next = setpool(lst->size, lst->sbucket);
 		lst = lst->next;
 	}
 	res = lst->content[lst->last].mem;
+	lst->last++;
 	lst->content[lst->last].size = size;
 #ifdef HISTORY
 	store(res, 1, size);
