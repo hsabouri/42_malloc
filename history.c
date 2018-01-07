@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 12:07:16 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/04 14:32:43 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/07 18:24:58 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void    store(void *ptr, int type, size_t size)
     t_hist **lst;
     t_hist *last;
 
-    lst = &getenv()->history;
+    lst = &getenv()->hist;
     if (*lst == NULL)
     {
         *lst = (t_hist *)MMAP(sizeof(t_hist));
@@ -38,24 +38,31 @@ void    store(void *ptr, int type, size_t size)
     last->size = size;
 }
 
-void    malloc_history(void)
+void    show_alloc_mem_ex(void)
 {
     t_hist  *lst;
+	size_t	alloc;
 
     lst = getenv()->hist;
+	alloc = 0;
     while (lst)
     {
-        if (lst->type == HIST_MALLOC)
-            ft_putstr("\n\n# Malloc allocation\n\t");
+		if (lst->type == HIST_ALLOC || lst->type == HIST_FREE)
+			alloc += lst->type;
+        if (lst->type == HIST_DEL_POOL)
+            putstr("\n\n# Pool deletion\n\t");
+		else if (lst->type == HIST_NEW_POOL)
+            putstr("\n\n# Pool creation\n\t");
         else if (lst->type == HIST_ALLOC)
-            ft_putstr("\n\n# Allocation\n\t");
+            putstr("\n\n# Allocation\n\t");
         else if (lst->type == HIST_REALLOC)
-            ft_putstr("\n\n# Reallocation\n\t");
-        if (lst->type == HIST_REALLOC)
-            ft_putstr("\n\n# Free\n\t");
+            putstr("\n\n# Reallocation\n\t");
+        if (lst->type == HIST_FREE)
+            putstr("\n\n# Free\n\t");
+        putstr("address: ");
         putsystox((size_t)lst->ptr);
-        ft_putstr("\n\t");
-        ft_putsize_t(lst->size);
+        putstr("\n\tsize: ");
+        putsystox(lst->size);
         lst = lst->next;
     }
 }

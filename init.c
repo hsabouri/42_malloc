@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/06 18:32:21 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/07 18:07:26 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,6 @@ t_pool  *setpool(size_t memsize, size_t sbucket)
         pool->content[i].max = sbucket;
         i++;
     }
-#ifdef HISTORY
-	store(pool->mem, 2, memsize);
-#endif
-	putstr("NEW POOL\n");
     return (pool);
 }
 
@@ -49,6 +45,17 @@ size_t  poolsize(size_t sbucket)
 		return (sbucket * BUCKETS);
 	else
 		return (sbucket * BUCKETS + getpagesize() * (overflow / getpagesize() + 1));
+}
+
+size_t	poolsize_large(size_t size)
+{
+	size_t overflow;
+
+	overflow = size % getpagesize();
+	if (overflow == 0)
+		return (size);
+	else
+		return (size + getpagesize() * (overflow / getpagesize() + 1));
 }
 
 t_env   *setenv(void)

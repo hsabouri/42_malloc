@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 15:47:17 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/06 18:32:53 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/07 18:17:42 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,15 @@ char	*fillstr(char *dst, char l, size_t size)
 int main(void)
 {
 	char *test1;
-	char *test2;
 	int i = 0;
 
-	while (i < 120000)
+	while (i < 10)
 	{
 		test1 = strdup("Hello");
-		test2 = strdup("Bonjour");
 		i++;
 	}
 	free(test1);
-	free(test2);
+#ifdef HISTORY
+	show_alloc_mem_ex();
+#endif
 }

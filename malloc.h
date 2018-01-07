@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/06 18:31:55 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/07 17:55:43 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,22 @@ typedef struct  s_env
     t_pool  *small;
     t_pool  *large;
 # ifdef HISTORY
-    t_hist  *history;
+    t_hist  *hist;
 # endif
 }               t_env;
 
 t_env           *getenv(void);
 t_pool			*setpool(size_t nbuckets, size_t sbucket);
+size_t			poolsize_large(size_t size);
+size_t			poolsize(size_t sbucket);
 
 void            *malloc(size_t size);
 void            free(void *ptr);
 
 void            putsystox(size_t addr);
+void			store(void *ptr, int type, size_t size);
 void            show_alloc_mem(void);
+void            show_alloc_mem_ex(void);
 
 void	putstr(char *str); //REMOVE
 
