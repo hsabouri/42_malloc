@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/07 18:07:26 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/08 16:16:06 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_pool  *setpool(size_t memsize, size_t sbucket)
     size_t  i;
     
     pool = (t_pool *)MMAP(sizeof(t_pool));
+	if (!pool)
+		return (NULL);
     pool->next = NULL;
     pool->content = (t_bucket *)MMAP(sizeof(t_bucket) * BUCKETS);
     pool->last = 0;
@@ -36,26 +38,21 @@ t_pool  *setpool(size_t memsize, size_t sbucket)
     return (pool);
 }
 
-size_t  poolsize(size_t sbucket)
+size_t	poolsize(size_t size)
 {
-	size_t overflow;
+	size_t			pagesize;
+	size_t			overflow;
+	struct rlimit	vms;
 
-	overflow = sbucket * BUCKETS % getpagesize();
-	if (overflow == 0)
-		return (sbucket * BUCKETS);
-	else
-		return (sbucket * BUCKETS + getpagesize() * (overflow / getpagesize() + 1));
-}
-
-size_t	poolsize_large(size_t size)
-{
-	size_t overflow;
-
-	overflow = size % getpagesize();
+	getrlimit(RLIMIT_AS, &vms);
+	if (size >= vms.rlim_cur)
+		return (0);
+	pagesize = getpagesize();
+	overflow = size % pagesize;
 	if (overflow == 0)
 		return (size);
 	else
-		return (size + getpagesize() * (overflow / getpagesize() + 1));
+		return ((size / pagesize + 1) * pagesize);
 }
 
 t_env   *setenv(void)
@@ -63,8 +60,8 @@ t_env   *setenv(void)
     t_env   *env;
 
     env = (t_env *)MMAP(sizeof(t_env));
-    env->stiny = poolsize(TINY);
-    env->ssmall = poolsize(SMALL);
+    env->stiny = poolsize(TINY * BUCKETS);
+    env->ssmall = poolsize(SMALL * BUCKETS);
     env->tiny = setpool(env->stiny, TINY);
     env->small = setpool(env->ssmall, SMALL);
     env->large = NULL;

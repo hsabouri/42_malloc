@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/07 18:16:36 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/08 14:17:40 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	*alloc(t_pool *lst, size_t size)
 		lst = lst->next;
 	if (lst->next == NULL && lst->last == lst->nbuckets - 1)
 	{
-		lst->next = setpool(lst->size, lst->sbucket);
+		if (!(lst->next = setpool(lst->size, lst->sbucket)))
+			return (NULL);
 		lst = lst->next;
 	}
 	res = lst->content[lst->last].mem;
@@ -35,10 +36,13 @@ void	*alloc(t_pool *lst, size_t size)
 void	*alloc_large(t_pool **lst, size_t size)
 {
 	void	*res;
+	size_t	rsize;
 	t_pool	*new;
 	t_pool	*curr;
 
-	new = setpool(poolsize_large(size), size);
+	rsize = poolsize(size);
+	if (!rsize || !(new = setpool(rsize, size)))
+		return (NULL);
 	new->last = 1;
 	if (!*lst)
 		*lst = new;
@@ -51,13 +55,13 @@ void	*alloc_large(t_pool **lst, size_t size)
 	}
 	res = new->mem;
 #ifdef HISTORY
-	store(res, 1, size);
+	store(res, HIST_ALLOC, rsize);
 #endif
 	return (res);
 }
 
 void	*malloc(size_t size)
-	{
+{
 	t_env	*env;
 	void	*res;
 

@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/07 17:55:43 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/08 16:16:46 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 # define MALLOC_H
 # include <unistd.h>
 # include <sys/mman.h>
-//# include "libft.h"
+# include <sys/resource.h>
 
 # define TINY 128
-# define SMALL 4096
+# define SMALL 2048
 # define BUCKETS 4096
 
 # define MMAP(size) mmap(NULL,size,0x01|0x02,0x1000|0x0002,-1,0)
+# define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
 typedef struct  s_bucket
 {
@@ -86,13 +87,22 @@ size_t			poolsize_large(size_t size);
 size_t			poolsize(size_t sbucket);
 
 void            *malloc(size_t size);
+void			*realloc(void *ptr, size_t size);
 void            free(void *ptr);
+
+t_pool			*search_pool(t_env *env, t_pool **before, void *ptr);
+t_pool			*search_normal(t_pool *lst, t_pool **before, void *ptr);
+t_pool			*search_large(t_pool *lst, t_pool **before, void *ptr);
+void			del_pool(t_pool *pool, t_pool *before);
+int				free_ptr(t_pool *pool, void *ptr);
 
 void            putsystox(size_t addr);
 void			store(void *ptr, int type, size_t size);
 void            show_alloc_mem(void);
 void            show_alloc_mem_ex(void);
 
-void	putstr(char *str); //REMOVE
+void			ft_putstr(const char *str);
+void			ft_putsystox(size_t addr);
+void			ft_putnbr(size_t n);
 
 #endif

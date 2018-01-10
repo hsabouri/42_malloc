@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 15:47:17 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/07 18:17:42 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/08 17:33:50 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,6 @@ char *strdup(const char *str)
 		i--;
 	}
 	return (dst);
-}
-
-void	putstr(char *str)
-{
-	int i = 0;
-
-	while (str[i])
-		i++;
-	write(1, str, i);
 }
 
 char	*fillstr(char *dst, char l, size_t size)
@@ -58,7 +49,7 @@ int main(void)
 
 	while (i < 10)
 	{
-		test1 = strdup("Hello");
+		test1 = (char *)malloc(50000);
 		i++;
 	}
 	free(test1);
