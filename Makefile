@@ -6,7 +6,7 @@
 #    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/10 10:36:31 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/01/10 14:35:49 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,19 +15,21 @@ ifeq ($(HOSTTYPE),)
 endif
 
 NAME = libft_malloc$(HOSTTYPE).so
-CFLAGS = -Wall -Wextra -Werror -I$(INC)
-#CFLAGS += -g -fsanitize=address
+CFLAGS = -Wall -Wextra -I$(INC)
+CFLAGS += -Werror
+CFLAGS += -g -fsanitize=address
 CC = clang
 SRCDIR = sources
 SRCS = init.c\
 	   history.c\
 	   free.c\
-	   history.c\
 	   malloc.c\
+	   realloc.c\
 	   show_alloc_mem.c\
 	   search.c\
 	   display.c\
-	   history.c
+	   history.c\
+	   tools.c
 
 TESTS = main.c
 SRC = $(SRCS:%.c=$(SRCDIR)/%.c)
@@ -38,17 +40,17 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 ifdef HISTORY
-	$(CC) -o $@ $< -I$(INC)/ $(CFLAGS) -shared -D HISTORY
+	$(CC) -o $@ $^ $(CFLAGS) -shared -D HISTORY
 else
-	$(CC) -o $@ $< -I$(INC)/ $(CFLAGS) -shared
+	$(CC) -o $@ $^ $(CFLAGS) -shared
 endif
 	ln -s $(NAME) libft_malloc.so
 
-test: $(OBJ) 
+test: $(OBJ) $(SRCDIR)/$(TESTS)
 ifdef HISTORY
-	$(CC) -o $@ $< $(SRCDIR)/$(TESTS) -I$(INC)/ $(CFLAGS) -D HISTORY
+	$(CC) -o $@ $^ $(CFLAGS) -D HISTORY
 else
-	$(CC) -o $@ $< $(SRCDIR)/$(TESTS) -I$(INC)/ $(CFLAGS)
+	$(CC) -o $@ $^ $(SRCDIR)/$(TESTS) $(CFLAGS)
 endif
 
 %.o: $(SRCDIR)/%.c
@@ -64,6 +66,7 @@ clean:
 fclean: clean
 	rm -rf $(NAME)
 	rm -f libft_malloc.so
+	rm -f test
 
 .PHONY: clean fclean re
 

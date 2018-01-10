@@ -6,18 +6,21 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 17:58:22 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/08 16:16:59 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/10 15:40:00 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void		free_bucket(t_pool *pool, size_t i)
+void		free_bucket(t_pool *pool, size_t i, void *ptr)
 {
 	t_bucket *buckets;
 	t_bucket tmp;
 
 	buckets = pool->content;
+#ifdef HISTORY
+	store(ptr, HIST_FREE, buckets[i].max);
+#endif
 	buckets[i].size = 0;
 	tmp = buckets[i];
 	buckets[i] = buckets[pool->last - 1];
@@ -45,10 +48,7 @@ int		free_ptr(t_pool *pool, void *ptr)
 	{
 		if (buckets[i].mem == ptr)
 		{
-#ifdef HISTORY
-			store(ptr, HIST_FREE, buckets[i].size);
-#endif
-			free_bucket(pool, i);
+			free_bucket(pool, i, ptr);
 			return (1);
 		}
 		i++;
