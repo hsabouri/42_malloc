@@ -6,7 +6,7 @@
 #    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/10 14:35:49 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/01/10 16:55:06 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,11 @@ ifdef HISTORY
 else
 	$(CC) $(CFLAGS) -o $@ -c $<
 endif
+
+inject: all
+	export DYLD_LIBRARY_PATH=.
+	export DYLD_INSERT_LIBRARIES=$(NAME)
+	export DYLD_FORCE_FLAT_NAMESPACE=1
 
 clean:
 	rm -rf $(OBJ)

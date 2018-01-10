@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/10 16:25:07 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/10 16:48:14 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	*malloc(size_t size)
 	t_env	*env;
 	void	*res;
 
+	ft_putstr("CUSTOM LIBRARY");
 	env = getenv();
 	if (size <= TINY)
 		res = alloc(env->tiny, size);
