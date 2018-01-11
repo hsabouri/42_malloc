@@ -6,7 +6,7 @@
 #    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/10 16:55:06 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/01/11 13:07:27 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ test: $(OBJ) $(SRCDIR)/$(TESTS)
 ifdef HISTORY
 	$(CC) -o $@ $^ $(CFLAGS) -D HISTORY
 else
-	$(CC) -o $@ $^ $(SRCDIR)/$(TESTS) $(CFLAGS)
+	$(CC) -o $@ $^  $(CFLAGS)
 endif
 
 %.o: $(SRCDIR)/%.c

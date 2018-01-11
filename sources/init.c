@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/08 16:16:06 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/11 14:09:17 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_pool  *setpool(size_t memsize, size_t sbucket)
     pool->content = (t_bucket *)MMAP(sizeof(t_bucket) * BUCKETS);
     pool->last = 0;
 	pool->size = memsize;
-    pool->nbuckets = BUCKETS;
+    pool->nbuckets = (sbucket > SMALL) ? 1 : BUCKETS;
     pool->sbucket = sbucket;
     pool->mem = (void *)MMAP(memsize);
     i = 0;

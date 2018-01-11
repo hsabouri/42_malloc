@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/10 16:48:14 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/11 14:17:07 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	*alloc_large(t_pool **lst, size_t size)
 	if (!rsize || !(new = setpool(rsize, size)))
 		return (NULL);
 	new->last = 1;
+	new->content[0].size = size;
 	if (!*lst)
 		*lst = new;
 	else
@@ -65,7 +66,6 @@ void	*malloc(size_t size)
 	t_env	*env;
 	void	*res;
 
-	ft_putstr("CUSTOM LIBRARY");
 	env = getenv();
 	if (size <= TINY)
 		res = alloc(env->tiny, size);
