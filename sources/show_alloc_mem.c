@@ -6,86 +6,99 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 12:11:08 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/11 14:26:53 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/12 17:13:36 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-static t_pool	*search_first(t_pool *pool, t_pool *current, t_pool *last)
-{
-	if (!pool)
-		return (current);
-	if (!current)
-		current = pool;
-	while (pool)
-	{
-		if (pool->mem < current->mem && (!last || pool->mem >= last->mem))
-			current = pool;
-		pool = pool->next;
-	}
-	return (current);
-}
-
-size_t			display_pool(t_pool *pool)
+static t_pool	*fill(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
 {
 	size_t i;
-	size_t total;
 
-	if (pool->sbucket == TINY)
-		ft_putstr("TINY : ");
-	else if (pool->sbucket == SMALL)
-		ft_putstr("SMALL : ");
-	else
-		ft_putstr("LARGE : ");
-	ft_putsystox((size_t)pool->mem);
-	ft_putstr("\n");
-	total = 0;
 	i = 0;
-	while (i < pool->last)
+	while (p1)
 	{
-		ft_putsystox((size_t)pool->content[i].mem);
-		ft_putstr(" - ");
-		ft_putsystox((size_t)pool->content[i].mem);
-		ft_putstr(" : ");
-		ft_putnbr(pool->content[i].size);
-		ft_putstr(((pool->content[i].size == 1) ? " octet\n" : " octets\n"));
-		total += pool->content[i].size;
+		arr[i] = p1;
+		p1 = p1->next;
 		i++;
 	}
-	return (total);
+	while (p2)
+	{
+		arr[i] = p2;
+		p2 = p2->next;
+		i++;
+	}
+	while (p3)
+	{
+		arr[i] = p3;
+		p3 = p3->next;
+		i++;
+	}
+	arr[i] = NULL;
+	return (arr);
+}
+
+static t_pool	*sort(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
+{
+	t_pool	*current;
+	t_pool	*tmp;
+	size_t	i;
+	size_t	j;
+
+	arr = fill(p1, p2, p3, arr);
+	current = arr[0];
+	i = 0;
+	while (arr[i] != NULL)
+	{
+		j = i;
+		while (arr[j] != NULL)
+		{
+			if (arr[j]->mem < current->mem)
+			{
+				tmp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+static size_t	getsize(t_pool *p1, t_pool *p2, t_pool *p3)
+{
+	size_t	len;
+
+	len = 0;
+	while (p1)
+	{
+		len++;
+		p1 = p1->next;
+	}
+	while (p2)
+	{
+		len++;
+		p2 = p2->next;
+	}
+	while (p3)
+	{
+		len++;
+		p3 = p3->next;
+	}
+	return (len);
 }
 
 void			show_alloc_mem(void)
 {
 	t_env		*env;
-	t_pool		*pool;
-	t_pool		*last;
-	size_t		total;
+	t_bucket	*sorted;
+	size_t		len;
 
 	env = getenv();
-	last = NULL;
-	total = 0;
-	ft_putsystox((size_t)env->tiny);
-	ft_putsystox((size_t)env->small);
-	ft_putsystox((size_t)env->large);
-	pool = search_first(env->tiny, NULL, last);
-	pool = search_first(env->small, pool, last);
-	pool = search_first(env->large, pool, last);
-	total += display_pool(pool);
-	last = pool;
-	while (last)
-	{
-		pool = search_first(env->tiny, NULL, last);
-		pool = search_first(env->small, pool, last);
-		pool = search_first(env->large, pool, last);
-		if (pool == last || !pool)
-			break;
-		if (pool->last > 0)
-			total += display_pool(pool);
-		last = pool;
-	}
-	ft_putstr("Total : ");
-	ft_putnbr(total);
-	ft_putstr(((total == 1) ? " octet\n" : " octets\n"));
+	len = getsize(env->tiny, env->small, env->large);
+	sorted = (t_pool **)MMAP(sizeof(t_pool *) * (len + 1));
+	sorted = sort(env->tiny, env->small, env->large, sorted);
+	display_pools(sorted);
+	mmunmap(sorted, sizeof(t_pool *) * len);
 }
