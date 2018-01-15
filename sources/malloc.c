@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/13 17:02:51 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 16:17:31 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*alloc(t_pool *lst, size_t size)
 
 	while (lst->next && lst->last == lst->nbuckets)
 		lst = lst->next;
-	if (lst->next == NULL && lst->last == lst->nbuckets - 1)
+	if (lst->next == NULL && lst->last == lst->nbuckets)
 	{
 		if (!(lst->next = setpool(lst->size, lst->sbucket)))
 			return (NULL);

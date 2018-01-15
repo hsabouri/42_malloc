@@ -6,22 +6,20 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 17:58:22 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/13 19:10:06 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 15:52:40 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void		free_bucket(t_pool *pool, size_t i, void *ptr)
+void		free_bucket(t_pool *pool, size_t i)
 {
 	t_bucket *buckets;
 	t_bucket tmp;
 
 	buckets = pool->content;
 #ifdef HISTORY
-	store(ptr, HIST_FREE, buckets[i].max, pool->size);
-#else
-	(void)ptr;
+	store(buckets[i].mem, HIST_FREE, buckets[i].max, pool->size);
 #endif
 	buckets[i].size = 0;
 	tmp = buckets[i];
@@ -32,10 +30,14 @@ void		free_bucket(t_pool *pool, size_t i, void *ptr)
 
 void		del_pool(t_pool *pool, t_pool *before)
 {
+	if (!before || pool->last > 0)
+		return;
 #ifdef HISTORY
 	store(pool->mem, HIST_DEL_POOL, pool->size, pool->size);
 #endif
 	before->next = pool->next;
+	munmap(pool->mem, pool->size);
+	munmap(pool->content, sizeof(t_bucket) * pool->nbuckets);
 	munmap(pool, sizeof(t_pool));
 }
 
@@ -50,7 +52,7 @@ int		free_ptr(t_pool *pool, void *ptr)
 	{
 		if (buckets[i].mem == ptr)
 		{
-			free_bucket(pool, i, ptr);
+			free_bucket(pool, i);
 			return (1);
 		}
 		i++;

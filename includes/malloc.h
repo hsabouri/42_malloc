@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/14 16:58:48 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 14:15:06 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,8 @@ typedef struct  s_hist
 **  s_hist type precisions
 **      1 -> alloc			-> HIST_ALLOC
 **      -1 -> free			-> HIST_FREE
-**		2 -> new pool		-> HIST_NEW_POOL
-**		-2 -> deleting pool	-> HIST_DEL_POOL
-**		3 -> new pool		-> HIST_REALLOC_BEGIN
-**		-3 -> deleting pool	-> HIST_REALLOC_END
+**		2 -> realloc begins	-> HIST_REALLOC_BEGIN
+**		-2 -> realloc ends	-> HIST_REALLOC_END
 **  if ptr == NULL, operation failed
 **  if ptr == NULL, operation failed
 */
@@ -97,16 +95,17 @@ size_t			poolsize(size_t sbucket);
 t_pool			*search_pool(t_env *env, t_pool **before, void *ptr);
 t_pool			*search_normal(t_pool *lst, t_pool **before, void *ptr);
 t_pool			*search_large(t_pool *lst, t_pool **before, void *ptr);
+size_t			search_bucket(t_pool *pool, void *ptr);
 void			del_pool(t_pool *pool, t_pool *before);
 int				free_ptr(t_pool *pool, void *ptr);
-void			free_bucket(t_pool *pool, size_t i, void *ptr);
+void			free_bucket(t_pool *pool, size_t i);
 
 void            show_alloc_mem(void);
 
-#ifdef HISTORY
+# ifdef HISTORY
 void            show_alloc_mem_ex(void);
 void			store(void *ptr, int type, size_t size, size_t rsize);
-#endif
+# endif
 
 void			ft_putstr(const char *str);
 void			ft_putsystox(size_t addr);

@@ -6,103 +6,80 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:22:10 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/14 17:05:59 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 15:26:09 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void			*resize_pool(t_pool *pool, size_t size)
+void	*resize_pool(t_pool *pool, size_t size, t_bucket *bucket)
 {
-	size_t memsize;
-
-	memsize = poolsize(size);
-	if (!memsize)
-		return (NULL);
-	if (!(pool->mem = (void *)mmap(pool->mem, memsize, MMAP_ARGS)))
-		return (NULL);
-	return (pool->mem);
-}
-
-size_t			locate_ptr(t_pool *pool, void *ptr)
-{
-	t_bucket	*buckets;
-	size_t		i;
-
-	i = 0;
-	buckets = pool->content;
-	while (i < pool->last)
-	{
-		if (ptr == buckets[i].mem)
-			return (i);
-		i++;
-	}
-	return (pool->nbuckets + 1);
-}
-
-void			*realloc_ptr(void *ptr, t_pool *pool, size_t size, size_t pos)
-{
-	t_bucket	*buckets;
-	void		*new;
-	
-	buckets = pool->content;
-	if (buckets[pos].mem == ptr)
-	{
-		if (buckets[pos].max >= size)
-		{
-			buckets[pos].size = size;
-			return (ptr);
-		}
-		else if (pool->nbuckets == 1)
-			return (resize_pool(pool, size));
-		else
-		{
-			if (!(new = malloc(size)))
-				return (NULL);
-			new = ft_memmove(new, ptr, buckets[pos].size);
-			free_bucket(pool, pos, ptr);
-			return (new);
-		}
-	}
-	return (NULL);
-}
-
-static void		clean(t_pool *pool, t_pool **before)
-{
-	if (pool->last == 0 && pool->sbucket > SMALL)
-	{
-#ifdef HISTORY
-		store(pool->mem, HIST_DEL_POOL, pool->size, pool->size);
-#endif
-		*before = pool->next;
-		munmap(pool, sizeof(t_pool));
-	}
-	else if (pool->last == 0)
-		del_pool(pool, *before);
-}
-
-void			*realloc(void *ptr, size_t size)
-{
-	t_env	*env;
-	t_pool	*pool;
-	t_pool	*before;
-	size_t	pos;
+	size_t	rsize;
+	void	*tmp;
 	void	*res;
 
-	if (!ptr)
+	res = pool->mem;
+	if (size > pool->size)
+	{
+		rsize = poolsize(size);
+		tmp = pool->mem;
+		pool->mem = MMAP(rsize);
+		pool->mem = ft_memmove(pool->mem, tmp, pool->size);
+		munmap(tmp, pool->size);
+		pool->size = rsize;
+		pool->sbucket = size;
+		bucket->max = rsize;
+		bucket->size = size;
+		bucket->mem = pool->mem;
+		res = pool->mem;
+	}
+	return (res);
+}
+
+void	*realloc_bucket(t_pool *pool, t_pool **before, size_t i, size_t size)
+{
+	void		*res;
+	t_bucket	*bucket;
+
+	bucket = pool->content + i;
+	res = bucket->mem;
+	if (size <= bucket->max)
+		bucket->size = size;
+	else if (size > SMALL && size > pool->size)
+		res = resize_pool(pool, size, bucket);
+	else if (size > SMALL)
+	{
+		pool->sbucket = size;
+		bucket->max = size;
+		bucket->size = size;
+		res = pool->mem;
+	}
+	else if (size > pool->sbucket)
+	{
+		if (!(res = malloc(size)))
+			return (NULL);
+		res = ft_memmove(res, bucket->mem, bucket->size);
+		free_bucket(pool, i);
+		del_pool(pool, *before);
+	}
+	return (res);
+}
+
+void	*realloc(void *ptr, size_t size)
+{
+	t_env 	*env;
+	t_pool	*pool;
+	t_pool	*before;
+	size_t	bucket;
+	void	*res;
+
+	if (!ptr || !size)
 		return (NULL);
 	env = getenv();
 	before = NULL;
 	if (!(pool = search_pool(env, &before, ptr)))
 		return (NULL);
-	pos = locate_ptr(pool, ptr);
-	clean(pool, &before);
-#ifdef HISTORY
-	store(ptr, HIST_REALLOC_BEGIN, pool->content[pos].size, pool->sbucket);
-#endif
-	res = realloc_ptr(ptr, pool, size, pos);
-#ifdef HISTORY
-	store(res, HIST_REALLOC_END, size, pool->sbucket);
-#endif
+	bucket = search_bucket(pool, ptr);
+	res = realloc_bucket(pool, &before, bucket, size);
 	return (res);
 }

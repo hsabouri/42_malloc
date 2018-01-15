@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 15:47:17 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 10:42:48 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 16:15:53 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ char	*fillstr(char *dst, char l, size_t size)
 int main(void)
 {
 	char *test1;
-	size_t i = 0;
+	int i = 0;
 
-	
-		test1 = (char *)malloc(5000);
-		show_alloc_mem();
-		test1 = (char *)realloc(test1, 6000);
+	while (i < 10)
+	{
+		test1 = (char *)malloc(127);
 		show_alloc_mem();
 		ft_putstr("\n");
-		free(test1);
 		i++;
+	}
+
 #ifdef HISTORY
 	show_alloc_mem_ex();
 #endif
