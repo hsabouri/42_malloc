@@ -6,21 +6,19 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 17:58:22 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 15:52:40 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 17:40:44 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void		free_bucket(t_pool *pool, size_t i)
+void	free_bucket(t_pool *pool, size_t i)
 {
 	t_bucket *buckets;
 	t_bucket tmp;
 
 	buckets = pool->content;
-#ifdef HISTORY
-	store(buckets[i].mem, HIST_FREE, buckets[i].max, pool->size);
-#endif
+	store(buckets[i].mem, HIST_FREE, buckets[i].size, pool->sbucket);
 	buckets[i].size = 0;
 	tmp = buckets[i];
 	buckets[i] = buckets[pool->last - 1];
@@ -28,17 +26,25 @@ void		free_bucket(t_pool *pool, size_t i)
 	pool->last--;
 }
 
-void		del_pool(t_pool *pool, t_pool *before)
+void	del_pool(t_pool *pool, t_pool *before)
 {
 	if (!before || pool->last > 0)
-		return;
-#ifdef HISTORY
-	store(pool->mem, HIST_DEL_POOL, pool->size, pool->size);
-#endif
+		return ;
 	before->next = pool->next;
 	munmap(pool->mem, pool->size);
 	munmap(pool->content, sizeof(t_bucket) * pool->nbuckets);
 	munmap(pool, sizeof(t_pool));
+}
+
+void	del_pool_first(t_pool **lst)
+{
+	t_pool	*tmp;
+
+	tmp = (*lst)->next;
+	munmap((*lst)->mem, (*lst)->size);
+	munmap((*lst)->content, sizeof(t_bucket) * (*lst)->nbuckets);
+	munmap(*lst, sizeof(t_pool));
+	*lst = tmp;
 }
 
 int		free_ptr(t_pool *pool, void *ptr)
@@ -60,14 +66,14 @@ int		free_ptr(t_pool *pool, void *ptr)
 	return (0);
 }
 
-void			free(void *ptr)
+void	free(void *ptr)
 {
 	t_env	*env;
 	t_pool	*before;
 	t_pool	*pool;
 
 	if (!ptr)
-		return;
+		return ;
 	env = getenv();
 	before = NULL;
 	if (!(pool = search_pool(env, &before, ptr)))
@@ -75,4 +81,6 @@ void			free(void *ptr)
 	free_ptr(pool, ptr);
 	if (pool->last == 0 && before != NULL)
 		del_pool(pool, before);
+	else if (pool->last == 0 && before == NULL && pool->sbucket > SMALL)
+		del_pool_first(&env->large);
 }

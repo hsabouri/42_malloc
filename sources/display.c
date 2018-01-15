@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 12:43:43 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/12 10:42:54 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 18:46:43 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,26 @@
 
 void		ft_putstr(const char *str)
 {
-	size_t len = 0;
+	size_t len;
 
+	len = 0;
 	while (str[len])
 		len++;
 	write(1, str, len);
 }
 
-void static	putsystoxrec(size_t addr)
+static void	putsystoxrec(size_t addr)
 {
-    char    *sym = "0123456789ABCDEF";
+	char	sym[16];
 
-    if (addr)
-    {
-        putsystoxrec(addr / 16);
-        if (!(addr / 16))
-            write(1, "0x", 2);
-        write(1, &sym[addr % 16], 1);
-    }
+	ft_memmove(sym, "0123456789ABCDEF", 16);
+	if (addr > 0)
+	{
+		putsystoxrec(addr / 16);
+		if (!(addr / 16))
+			write(1, "0x", 2);
+		write(1, &sym[addr % 16], 1);
+	}
 }
 
 void		ft_putsystox(size_t addr)
@@ -45,6 +47,7 @@ void		ft_putsystox(size_t addr)
 static void	putnbrrec(size_t n)
 {
 	char	tmp[1];
+
 	if (n)
 	{
 		putnbrrec(n / 10);

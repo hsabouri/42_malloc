@@ -6,37 +6,40 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 12:07:16 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/13 15:49:59 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 19:09:05 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-#ifdef HISTORY
+
+t_hist			*get_last_hist(void)
+{
+	t_env	*env;
+
+	env = getenv();
+	if (!env->hist)
+	{
+		env->hist = (t_hist *)MMAP(sizeof(t_hist));
+		env->last = env->hist;
+	}
+	else
+	{
+		env->last->next = (t_hist *)MMAP(sizeof(t_hist));
+		env->last = env->last->next;
+	}
+	return (env->last);
+}
 
 void			store(void *ptr, int type, size_t size, size_t rsize)
 {
-    t_hist **lst;
-    t_hist *last;
+	t_hist *last;
 
-    lst = &getenv()->hist;
-    if (*lst == NULL)
-    {
-        *lst = (t_hist *)MMAP(sizeof(t_hist));
-        last = *lst;
-    }
-    else
-    {
-        last = *lst;
-        while (last->next != NULL)
-            last = last->next;
-        last->next = (t_hist *)MMAP(sizeof(t_hist));
-        last = last->next;
-    }
-    last->type = type;
-    last->ptr = ptr;
-    last->next = NULL;
-    last->size = size;
-    last->rsize = rsize;
+	last = get_last_hist();
+	last->type = type;
+	last->ptr = ptr;
+	last->next = NULL;
+	last->size = size;
+	last->rsize = rsize;
 }
 
 static t_hist	*show_realloc(t_hist *lst)
@@ -76,21 +79,19 @@ static t_hist	*show_other(t_hist *lst)
 
 void			show_alloc_mem_ex(void)
 {
-    t_hist  *lst;
+	t_hist	*lst;
 	size_t	alloc;
 
-    lst = getenv()->hist;
+	lst = getenv()->hist;
 	alloc = 0;
-    while (lst)
-    {
+	while (lst)
+	{
 		if (lst->type == HIST_ALLOC || lst->type == HIST_FREE)
 			alloc += lst->type;
-        if (lst->type == HIST_REALLOC_BEGIN)
-            lst = show_realloc(lst);
+		if (lst->type == HIST_REALLOC_BEGIN)
+			lst = show_realloc(lst);
 		else
 			lst = show_other(lst);
-        lst = lst->next;
-    }
+		lst = lst->next;
+	}
 }
-
-#endif

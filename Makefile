@@ -6,7 +6,7 @@
 #    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/13 16:42:17 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/01/15 20:31:27 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ endif
 NAME = libft_malloc$(HOSTTYPE).so
 CFLAGS = -Wall -Wextra -I$(INCDIR)
 CFLAGS += -Werror
-CFLAGS += -g -fsanitize=address
+#CFLAGS += -g -fsanitize=address
 CC = clang
 SRCDIR = sources
 SRCS = init.c\
@@ -41,26 +41,14 @@ OBJ	= $(SRC:$(SRCDIR)/%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-ifdef HISTORY
-	$(CC) -o $@ $^ $(CFLAGS) -shared -D HISTORY
-else
 	$(CC) -o $@ $^ $(CFLAGS) -shared
-endif
 	ln -s $(NAME) libft_malloc.so
 
-test: $(OBJ) $(SRCDIR)/$(TESTS)
-ifdef HISTORY
-	$(CC) -o $@ $^ $(CFLAGS) -D HISTORY
-else
+test: $(OBJ) $(TESTS)
 	$(CC) -o $@ $^ $(CFLAGS)
-endif
 
 %.o: $(SRCDIR)/%.c $(INCDIR)/$(INCS)
-ifdef HISTORY
-	$(CC) $(CFLAGS) -o $@ -c $< -D HISTORY
-else
 	$(CC) $(CFLAGS) -o $@ -c $<
-endif
 
 inject: all
 	export DYLD_LIBRARY_PATH=.

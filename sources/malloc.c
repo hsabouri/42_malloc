@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 16:17:31 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 16:43:36 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ void	*alloc(t_pool *lst, size_t size)
 	res = lst->content[lst->last].mem;
 	lst->content[lst->last].size = size;
 	lst->last++;
-#ifdef HISTORY
 	store(res, 1, size, lst->sbucket);
-#endif
 	return (res);
 }
 
@@ -55,9 +53,7 @@ void	*alloc_large(t_pool **lst, size_t size)
 		curr->next = new;
 	}
 	res = new->mem;
-#ifdef HISTORY
 	store(res, HIST_ALLOC, size, rsize);
-#endif
 	return (res);
 }
 

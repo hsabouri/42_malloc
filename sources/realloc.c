@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:22:10 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 15:26:09 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/15 19:18:11 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*realloc_bucket(t_pool *pool, t_pool **before, size_t i, size_t size)
 
 void	*realloc(void *ptr, size_t size)
 {
-	t_env 	*env;
+	t_env	*env;
 	t_pool	*pool;
 	t_pool	*before;
 	size_t	bucket;
@@ -80,6 +80,9 @@ void	*realloc(void *ptr, size_t size)
 	if (!(pool = search_pool(env, &before, ptr)))
 		return (NULL);
 	bucket = search_bucket(pool, ptr);
+	store(ptr, HIST_REALLOC_BEGIN, pool->content[bucket].size,\
+			pool->content[bucket].max);
 	res = realloc_bucket(pool, &before, bucket, size);
+	store(res, HIST_REALLOC_END, size, size);
 	return (res);
 }
