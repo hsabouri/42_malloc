@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/12 17:13:48 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/14 16:58:48 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 # define TINY 128
 # define SMALL 2048
-# define BUCKETS 4096
+# define BUCKETS 3
 
 # define MMAP(size) mmap(NULL,size,0x01|0x02,0x1000|0x0002,-1,0)
 # define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
@@ -54,6 +54,7 @@ typedef struct  s_hist
 {
     int             type;
     size_t          size;
+    size_t          rsize;
     void            *ptr;
     struct s_hist   *next;
 }               t_hist;
@@ -100,17 +101,19 @@ void			del_pool(t_pool *pool, t_pool *before);
 int				free_ptr(t_pool *pool, void *ptr);
 void			free_bucket(t_pool *pool, size_t i, void *ptr);
 
-void            putsystox(size_t addr);
-void			store(void *ptr, int type, size_t size);
 void            show_alloc_mem(void);
 
 #ifdef HISTORY
 void            show_alloc_mem_ex(void);
+void			store(void *ptr, int type, size_t size, size_t rsize);
 #endif
 
 void			ft_putstr(const char *str);
 void			ft_putsystox(size_t addr);
 void			ft_putnbr(size_t n);
 void			*ft_memmove(void *dst, void *src, size_t len);
+size_t			bucket_content(t_pool *pool);
+void			total_footer(size_t total);
+void			size_header(t_pool *pool);
 
 #endif

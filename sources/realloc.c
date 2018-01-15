@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:22:10 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/10 16:23:08 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/14 17:05:59 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void	*resize_pool(t_pool *pool, size_t size)
+void			*resize_pool(t_pool *pool, size_t size)
 {
 	size_t memsize;
 
@@ -24,7 +24,7 @@ void	*resize_pool(t_pool *pool, size_t size)
 	return (pool->mem);
 }
 
-size_t	locate_ptr(t_pool *pool, void *ptr)
+size_t			locate_ptr(t_pool *pool, void *ptr)
 {
 	t_bucket	*buckets;
 	size_t		i;
@@ -40,7 +40,7 @@ size_t	locate_ptr(t_pool *pool, void *ptr)
 	return (pool->nbuckets + 1);
 }
 
-void	*realloc_ptr(void *ptr, t_pool *pool, size_t size, size_t pos)
+void			*realloc_ptr(void *ptr, t_pool *pool, size_t size, size_t pos)
 {
 	t_bucket	*buckets;
 	void		*new;
@@ -67,11 +67,25 @@ void	*realloc_ptr(void *ptr, t_pool *pool, size_t size, size_t pos)
 	return (NULL);
 }
 
-void	*realloc(void *ptr, size_t size)
+static void		clean(t_pool *pool, t_pool **before)
+{
+	if (pool->last == 0 && pool->sbucket > SMALL)
+	{
+#ifdef HISTORY
+		store(pool->mem, HIST_DEL_POOL, pool->size, pool->size);
+#endif
+		*before = pool->next;
+		munmap(pool, sizeof(t_pool));
+	}
+	else if (pool->last == 0)
+		del_pool(pool, *before);
+}
+
+void			*realloc(void *ptr, size_t size)
 {
 	t_env	*env;
 	t_pool	*pool;
-	t_pool	**before;
+	t_pool	*before;
 	size_t	pos;
 	void	*res;
 
@@ -79,15 +93,16 @@ void	*realloc(void *ptr, size_t size)
 		return (NULL);
 	env = getenv();
 	before = NULL;
-	if (!(pool = search_pool(env, before, ptr)))
+	if (!(pool = search_pool(env, &before, ptr)))
 		return (NULL);
 	pos = locate_ptr(pool, ptr);
+	clean(pool, &before);
 #ifdef HISTORY
-	store(ptr, HIST_REALLOC_BEGIN, pool->content[pos].size);
+	store(ptr, HIST_REALLOC_BEGIN, pool->content[pos].size, pool->sbucket);
 #endif
 	res = realloc_ptr(ptr, pool, size, pos);
 #ifdef HISTORY
-	store(res, HIST_REALLOC_END, size);
+	store(res, HIST_REALLOC_END, size, pool->sbucket);
 #endif
 	return (res);
 }

@@ -6,40 +6,56 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 12:11:08 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/12 17:13:36 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/13 16:32:29 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-static t_pool	*fill(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
+static void		display_pools(t_pool **sorted)
+{
+	size_t	i;
+	size_t	total;
+
+	i = 0;
+	total = 0;
+	while (sorted[i])
+	{
+		size_header(sorted[i]);
+		total += bucket_content(sorted[i]);
+		i++;
+	}
+	total_footer(total);
+}
+
+static t_pool	**fill(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
 {
 	size_t i;
 
 	i = 0;
 	while (p1)
 	{
-		arr[i] = p1;
+		if (p1->last && ++i)
+			arr[i - 1] = p1;
 		p1 = p1->next;
-		i++;
 	}
 	while (p2)
 	{
-		arr[i] = p2;
+		if (p2->last && ++i)
+			arr[i - 1] = p2;
 		p2 = p2->next;
-		i++;
 	}
 	while (p3)
 	{
-		arr[i] = p3;
+		if (p3->last && ++i)
+			arr[i - 1] = p3;
 		p3 = p3->next;
-		i++;
 	}
 	arr[i] = NULL;
 	return (arr);
 }
 
-static t_pool	*sort(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
+static t_pool	**sort(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
 {
 	t_pool	*current;
 	t_pool	*tmp;
@@ -64,6 +80,7 @@ static t_pool	*sort(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)
 		}
 		i++;
 	}
+	return (arr);
 }
 
 static size_t	getsize(t_pool *p1, t_pool *p2, t_pool *p3)
@@ -73,17 +90,20 @@ static size_t	getsize(t_pool *p1, t_pool *p2, t_pool *p3)
 	len = 0;
 	while (p1)
 	{
-		len++;
+		if (p1->last)
+			len++;
 		p1 = p1->next;
 	}
 	while (p2)
 	{
-		len++;
+		if (p2->last)
+			len++;
 		p2 = p2->next;
 	}
 	while (p3)
 	{
-		len++;
+		if (p3->last)
+			len++;
 		p3 = p3->next;
 	}
 	return (len);
@@ -92,7 +112,7 @@ static size_t	getsize(t_pool *p1, t_pool *p2, t_pool *p3)
 void			show_alloc_mem(void)
 {
 	t_env		*env;
-	t_bucket	*sorted;
+	t_pool		**sorted;
 	size_t		len;
 
 	env = getenv();
@@ -100,5 +120,5 @@ void			show_alloc_mem(void)
 	sorted = (t_pool **)MMAP(sizeof(t_pool *) * (len + 1));
 	sorted = sort(env->tiny, env->small, env->large, sorted);
 	display_pools(sorted);
-	mmunmap(sorted, sizeof(t_pool *) * len);
+	munmap(sorted, sizeof(t_pool *) * len);
 }

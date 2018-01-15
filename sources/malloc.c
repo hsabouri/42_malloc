@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/11 14:17:07 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/13 17:02:51 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*alloc(t_pool *lst, size_t size)
 {
 	void	*res;
 
-	while (lst->next && lst->last == lst->nbuckets - 1)
+	while (lst->next && lst->last == lst->nbuckets)
 		lst = lst->next;
 	if (lst->next == NULL && lst->last == lst->nbuckets - 1)
 	{
@@ -28,7 +28,7 @@ void	*alloc(t_pool *lst, size_t size)
 	lst->content[lst->last].size = size;
 	lst->last++;
 #ifdef HISTORY
-	store(res, 1, size);
+	store(res, 1, size, lst->sbucket);
 #endif
 	return (res);
 }
@@ -56,7 +56,7 @@ void	*alloc_large(t_pool **lst, size_t size)
 	}
 	res = new->mem;
 #ifdef HISTORY
-	store(res, HIST_ALLOC, rsize);
+	store(res, HIST_ALLOC, size, rsize);
 #endif
 	return (res);
 }
@@ -67,6 +67,8 @@ void	*malloc(size_t size)
 	void	*res;
 
 	env = getenv();
+	if (!size)
+		return (NULL);
 	if (size <= TINY)
 		res = alloc(env->tiny, size);
 	else if (size <= SMALL)

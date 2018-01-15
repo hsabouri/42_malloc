@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 17:58:22 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/10 16:34:41 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/13 19:10:06 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		free_bucket(t_pool *pool, size_t i, void *ptr)
 
 	buckets = pool->content;
 #ifdef HISTORY
-	store(ptr, HIST_FREE, buckets[i].max);
+	store(ptr, HIST_FREE, buckets[i].max, pool->size);
 #else
 	(void)ptr;
 #endif
@@ -33,10 +33,10 @@ void		free_bucket(t_pool *pool, size_t i, void *ptr)
 void		del_pool(t_pool *pool, t_pool *before)
 {
 #ifdef HISTORY
-	store(pool->mem, HIST_DEL_POOL, pool->size);
+	store(pool->mem, HIST_DEL_POOL, pool->size, pool->size);
 #endif
 	before->next = pool->next;
-	munmap(pool, sizeof(pool));
+	munmap(pool, sizeof(t_pool));
 }
 
 int		free_ptr(t_pool *pool, void *ptr)

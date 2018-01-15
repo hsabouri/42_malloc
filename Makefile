@@ -6,7 +6,7 @@
 #    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/11 13:07:27 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/01/13 16:42:17 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ ifeq ($(HOSTTYPE),)
 endif
 
 NAME = libft_malloc$(HOSTTYPE).so
-CFLAGS = -Wall -Wextra -I$(INC)
+CFLAGS = -Wall -Wextra -I$(INCDIR)
 CFLAGS += -Werror
 CFLAGS += -g -fsanitize=address
 CC = clang
@@ -28,12 +28,14 @@ SRCS = init.c\
 	   show_alloc_mem.c\
 	   search.c\
 	   display.c\
+	   display2.c\
 	   history.c\
 	   tools.c
 
-TESTS = main.c
 SRC = $(SRCS:%.c=$(SRCDIR)/%.c)
-INC = includes
+TESTS = main.c
+INCDIR = includes
+INCS = malloc.h
 OBJ	= $(SRC:$(SRCDIR)/%.c=%.o)
 
 all: $(NAME)
@@ -50,10 +52,10 @@ test: $(OBJ) $(SRCDIR)/$(TESTS)
 ifdef HISTORY
 	$(CC) -o $@ $^ $(CFLAGS) -D HISTORY
 else
-	$(CC) -o $@ $^  $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS)
 endif
 
-%.o: $(SRCDIR)/%.c
+%.o: $(SRCDIR)/%.c $(INCDIR)/$(INCS)
 ifdef HISTORY
 	$(CC) $(CFLAGS) -o $@ -c $< -D HISTORY
 else

@@ -6,14 +6,14 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 12:07:16 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/10 16:23:47 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/13 15:49:59 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #ifdef HISTORY
 
-void			store(void *ptr, int type, size_t size)
+void			store(void *ptr, int type, size_t size, size_t rsize)
 {
     t_hist **lst;
     t_hist *last;
@@ -36,6 +36,7 @@ void			store(void *ptr, int type, size_t size)
     last->ptr = ptr;
     last->next = NULL;
     last->size = size;
+    last->rsize = rsize;
 }
 
 static t_hist	*show_realloc(t_hist *lst)
@@ -68,6 +69,8 @@ static t_hist	*show_other(t_hist *lst)
 	ft_putsystox((size_t)lst->ptr);
 	ft_putstr("\n\tsize: ");
 	ft_putnbr(lst->size);
+	ft_putstr("\n\treal size: ");
+	ft_putnbr(lst->rsize);
 	return (lst);
 }
 
