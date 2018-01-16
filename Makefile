@@ -6,7 +6,7 @@
 #    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/15 20:31:27 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/01/16 14:25:40 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME = libft_malloc$(HOSTTYPE).so
+NAME = libft_malloc_$(HOSTTYPE).so
 CFLAGS = -Wall -Wextra -I$(INCDIR)
 CFLAGS += -Werror
 #CFLAGS += -g -fsanitize=address
-CC = clang
+CC = gcc
 SRCDIR = sources
 SRCS = init.c\
 	   history.c\
@@ -49,11 +49,6 @@ test: $(OBJ) $(TESTS)
 
 %.o: $(SRCDIR)/%.c $(INCDIR)/$(INCS)
 	$(CC) $(CFLAGS) -o $@ -c $<
-
-inject: all
-	export DYLD_LIBRARY_PATH=.
-	export DYLD_INSERT_LIBRARIES=$(NAME)
-	export DYLD_FORCE_FLAT_NAMESPACE=1
 
 clean:
 	rm -rf $(OBJ)

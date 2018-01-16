@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 16:43:36 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:15:12 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	*malloc(size_t size)
 	t_env	*env;
 	void	*res;
 
-	env = getenv();
+	env = ft_getenv();
 	if (!size)
 		return (NULL);
 	if (size <= TINY)

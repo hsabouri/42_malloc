@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 12:11:08 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/13 16:32:29 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:14:40 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void			show_alloc_mem(void)
 	t_pool		**sorted;
 	size_t		len;
 
-	env = getenv();
+	env = ft_getenv();
 	len = getsize(env->tiny, env->small, env->large);
 	sorted = (t_pool **)MMAP(sizeof(t_pool *) * (len + 1));
 	sorted = sort(env->tiny, env->small, env->large, sorted);

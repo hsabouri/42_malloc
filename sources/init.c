@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 19:03:58 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:11:47 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_pool		*setpool(size_t memsize, size_t sbucket)
+t_pool			*setpool(size_t memsize, size_t sbucket)
 {
 	t_pool	*pool;
 	size_t	i;
@@ -38,7 +38,7 @@ t_pool		*setpool(size_t memsize, size_t sbucket)
 	return (pool);
 }
 
-size_t		poolsize(size_t size)
+size_t			poolsize(size_t size)
 {
 	size_t			pagesize;
 	size_t			overflow;
@@ -55,7 +55,7 @@ size_t		poolsize(size_t size)
 		return ((size / pagesize + 1) * pagesize);
 }
 
-t_env		*setenv(void)
+static t_env	*ft_setenv(void)
 {
 	t_env	*env;
 
@@ -70,11 +70,11 @@ t_env		*setenv(void)
 	return (env);
 }
 
-t_env		*getenv(void)
+t_env			*ft_getenv(void)
 {
 	static t_env	*env = NULL;
 
 	if (!env)
-		env = setenv();
+		env = ft_setenv();
 	return (env);
 }

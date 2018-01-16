@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 12:07:16 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 19:09:05 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:14:57 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_hist			*get_last_hist(void)
 {
 	t_env	*env;
 
-	env = getenv();
+	env = ft_getenv();
 	if (!env->hist)
 	{
 		env->hist = (t_hist *)MMAP(sizeof(t_hist));
@@ -82,7 +82,7 @@ void			show_alloc_mem_ex(void)
 	t_hist	*lst;
 	size_t	alloc;
 
-	lst = getenv()->hist;
+	lst = ft_getenv()->hist;
 	alloc = 0;
 	while (lst)
 	{

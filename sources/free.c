@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 17:58:22 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 17:40:44 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:14:48 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	free(void *ptr)
 
 	if (!ptr)
 		return ;
-	env = getenv();
+	env = ft_getenv();
 	before = NULL;
 	if (!(pool = search_pool(env, &before, ptr)))
 		return ;

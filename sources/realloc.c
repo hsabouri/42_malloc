@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:22:10 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 19:18:11 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:15:25 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	*realloc(void *ptr, size_t size)
 
 	if (!ptr || !size)
 		return (NULL);
-	env = getenv();
+	env = ft_getenv();
 	before = NULL;
 	if (!(pool = search_pool(env, &before, ptr)))
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/15 19:03:37 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:26:06 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ void			*malloc(size_t size);
 void			*realloc(void *ptr, size_t size);
 void			free(void *ptr);
 
-t_env			*getenv(void);
+void			show_alloc_mem(void);
+void			show_alloc_mem_ex(void);
+
+t_env			*ft_getenv(void);
 t_pool			*setpool(size_t nbuckets, size_t sbucket);
 size_t			poolsize_large(size_t size);
 size_t			poolsize(size_t sbucket);
@@ -95,9 +98,6 @@ void			del_pool(t_pool *pool, t_pool *before);
 int				free_ptr(t_pool *pool, void *ptr);
 void			free_bucket(t_pool *pool, size_t i);
 
-void			show_alloc_mem(void);
-
-void			show_alloc_mem_ex(void);
 void			store(void *ptr, int type, size_t size, size_t rsize);
 
 void			ft_putstr(const char *str);
