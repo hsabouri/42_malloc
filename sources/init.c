@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:11:47 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:04:51 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_pool			*setpool(size_t memsize, size_t sbucket)
+t_pool			*ft_setpool(size_t memsize, size_t sbucket)
 {
 	t_pool	*pool;
 	size_t	i;
@@ -38,7 +38,7 @@ t_pool			*setpool(size_t memsize, size_t sbucket)
 	return (pool);
 }
 
-size_t			poolsize(size_t size)
+size_t			ft_poolsize(size_t size)
 {
 	size_t			pagesize;
 	size_t			overflow;
@@ -60,10 +60,10 @@ static t_env	*ft_setenv(void)
 	t_env	*env;
 
 	env = (t_env *)MMAP(sizeof(t_env));
-	env->stiny = poolsize(TINY * BUCKETS);
-	env->ssmall = poolsize(SMALL * BUCKETS);
-	env->tiny = setpool(env->stiny, TINY);
-	env->small = setpool(env->ssmall, SMALL);
+	env->stiny = ft_poolsize(TINY * BUCKETS);
+	env->ssmall = ft_poolsize(SMALL * BUCKETS);
+	env->tiny = ft_setpool(env->stiny, TINY);
+	env->small = ft_setpool(env->ssmall, SMALL);
 	env->large = NULL;
 	env->hist = NULL;
 	env->last = NULL;

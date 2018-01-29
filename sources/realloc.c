@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:22:10 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:15:25 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:33:59 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void	*resize_pool(t_pool *pool, size_t size, t_bucket *bucket)
+static void	*resize_pool(t_pool *pool, size_t size, t_bucket *bucket)
 {
 	size_t	rsize;
 	void	*tmp;
@@ -21,7 +21,7 @@ void	*resize_pool(t_pool *pool, size_t size, t_bucket *bucket)
 	res = pool->mem;
 	if (size > pool->size)
 	{
-		rsize = poolsize(size);
+		rsize = ft_poolsize(size);
 		tmp = pool->mem;
 		pool->mem = MMAP(rsize);
 		pool->mem = ft_memmove(pool->mem, tmp, pool->size);
@@ -36,7 +36,7 @@ void	*resize_pool(t_pool *pool, size_t size, t_bucket *bucket)
 	return (res);
 }
 
-void	*realloc_bucket(t_pool *pool, t_pool **before, size_t i, size_t size)
+static void	*realloc_bucket(t_pool *pool, t_pool **before, size_t i, size_t size)
 {
 	void		*res;
 	t_bucket	*bucket;
@@ -59,8 +59,8 @@ void	*realloc_bucket(t_pool *pool, t_pool **before, size_t i, size_t size)
 		if (!(res = malloc(size)))
 			return (NULL);
 		res = ft_memmove(res, bucket->mem, bucket->size);
-		free_bucket(pool, i);
-		del_pool(pool, *before);
+		ft_free_bucket(pool, i);
+		ft_del_pool(pool, *before);
 	}
 	return (res);
 }
@@ -73,16 +73,17 @@ void	*realloc(void *ptr, size_t size)
 	size_t	bucket;
 	void	*res;
 
+	ft_putstr("realloc\n");
 	if (!ptr || !size)
 		return (NULL);
 	env = ft_getenv();
 	before = NULL;
-	if (!(pool = search_pool(env, &before, ptr)))
+	if (!(pool = ft_search_pool(env, &before, ptr)))
 		return (NULL);
-	bucket = search_bucket(pool, ptr);
-	store(ptr, HIST_REALLOC_BEGIN, pool->content[bucket].size,\
+	bucket = ft_search_bucket(pool, ptr);
+	ft_store(ptr, HIST_REALLOC_BEGIN, pool->content[bucket].size,\
 			pool->content[bucket].max);
 	res = realloc_bucket(pool, &before, bucket, size);
-	store(res, HIST_REALLOC_END, size, size);
+	ft_store(res, HIST_REALLOC_END, size, size);
 	return (res);
 }

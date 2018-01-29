@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/13 13:45:58 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:09:39 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:02:46 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-size_t		bucket_content(t_pool *pool)
+size_t		ft_bucket_content(t_pool *pool)
 {
 	size_t	i;
 	size_t	total;
@@ -34,7 +34,7 @@ size_t		bucket_content(t_pool *pool)
 	return (total);
 }
 
-void		total_footer(size_t total)
+void		ft_total_footer(size_t total)
 {
 	if (total)
 	{
@@ -44,7 +44,7 @@ void		total_footer(size_t total)
 	}
 }
 
-void		size_header(t_pool *pool)
+void		ft_size_header(t_pool *pool)
 {
 	if (pool->sbucket == TINY)
 		ft_putstr("TINY : ");

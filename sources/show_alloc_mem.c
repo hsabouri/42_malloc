@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 12:11:08 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:14:40 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:09:45 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static void		display_pools(t_pool **sorted)
 	total = 0;
 	while (sorted[i])
 	{
-		size_header(sorted[i]);
-		total += bucket_content(sorted[i]);
+		ft_size_header(sorted[i]);
+		total += ft_bucket_content(sorted[i]);
 		i++;
 	}
-	total_footer(total);
+	ft_total_footer(total);
 }
 
 static t_pool	**fill(t_pool *p1, t_pool *p2, t_pool *p3, t_pool **arr)

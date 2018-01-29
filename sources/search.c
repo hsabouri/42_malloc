@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 15:06:31 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:13:34 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:02:10 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-size_t	search_bucket(t_pool *pool, void *ptr)
+size_t	ft_search_bucket(t_pool *pool, void *ptr)
 {
 	size_t		res;
 
@@ -22,7 +22,7 @@ size_t	search_bucket(t_pool *pool, void *ptr)
 	return (res);
 }
 
-t_pool	*search_normal(t_pool *lst, t_pool **before, void *ptr)
+t_pool	*ft_search_normal(t_pool *lst, t_pool **before, void *ptr)
 {
 	t_pool	*res;
 	int		is_first;
@@ -49,7 +49,7 @@ t_pool	*search_normal(t_pool *lst, t_pool **before, void *ptr)
 	return (res);
 }
 
-t_pool	*search_large(t_pool *lst, t_pool **before, void *ptr)
+t_pool	*ft_search_large(t_pool *lst, t_pool **before, void *ptr)
 {
 	t_pool	*res;
 
@@ -69,17 +69,17 @@ t_pool	*search_large(t_pool *lst, t_pool **before, void *ptr)
 	return (res);
 }
 
-t_pool	*search_pool(t_env *env, t_pool **before, void *ptr)
+t_pool	*ft_search_pool(t_env *env, t_pool **before, void *ptr)
 {
 	t_pool	*res;
 	t_pool	*tbefore;
 
 	tbefore = NULL;
-	res = search_normal(env->tiny, &tbefore, ptr);
+	res = ft_search_normal(env->tiny, &tbefore, ptr);
 	if (!res)
-		res = search_normal(env->small, &tbefore, ptr);
-	if (!res)
-		res = search_large(env->large, &tbefore, ptr);
+		res = ft_search_normal(env->small, &tbefore, ptr);
+	if (!res && env->large)
+		res = ft_search_large(env->large, &tbefore, ptr);
 	if (res)
 		*before = tbefore;
 	return (res);

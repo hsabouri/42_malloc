@@ -6,7 +6,7 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 11:54:46 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:26:06 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:01:09 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,26 +86,26 @@ void			show_alloc_mem(void);
 void			show_alloc_mem_ex(void);
 
 t_env			*ft_getenv(void);
-t_pool			*setpool(size_t nbuckets, size_t sbucket);
-size_t			poolsize_large(size_t size);
-size_t			poolsize(size_t sbucket);
+t_pool			*ft_setpool(size_t nbuckets, size_t sbucket);
+size_t			ft_poolsize_large(size_t size);
+size_t			ft_poolsize(size_t sbucket);
 
-t_pool			*search_pool(t_env *env, t_pool **before, void *ptr);
-t_pool			*search_normal(t_pool *lst, t_pool **before, void *ptr);
-t_pool			*search_large(t_pool *lst, t_pool **before, void *ptr);
-size_t			search_bucket(t_pool *pool, void *ptr);
-void			del_pool(t_pool *pool, t_pool *before);
-int				free_ptr(t_pool *pool, void *ptr);
-void			free_bucket(t_pool *pool, size_t i);
+t_pool			*ft_search_pool(t_env *env, t_pool **before, void *ptr);
+t_pool			*ft_search_normal(t_pool *lst, t_pool **before, void *ptr);
+t_pool			*ft_search_large(t_pool *lst, t_pool **before, void *ptr);
+size_t			ft_search_bucket(t_pool *pool, void *ptr);
+void			ft_del_pool(t_pool *pool, t_pool *before);
+int				ft_free_ptr(t_pool *pool, void *ptr);
+void			ft_free_bucket(t_pool *pool, size_t i);
 
-void			store(void *ptr, int type, size_t size, size_t rsize);
+void			ft_store(void *ptr, int type, size_t size, size_t rsize);
 
 void			ft_putstr(const char *str);
 void			ft_putsystox(size_t addr);
 void			ft_putnbr(size_t n);
 void			*ft_memmove(void *dst, void *src, size_t len);
-size_t			bucket_content(t_pool *pool);
-void			total_footer(size_t total);
-void			size_header(t_pool *pool);
+size_t			ft_bucket_content(t_pool *pool);
+void			ft_total_footer(size_t total);
+void			ft_size_header(t_pool *pool);
 
 #endif

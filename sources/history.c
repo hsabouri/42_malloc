@@ -6,13 +6,13 @@
 /*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 12:07:16 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/16 14:14:57 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/01/29 17:10:39 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_hist			*get_last_hist(void)
+static t_hist	*get_last_hist(void)
 {
 	t_env	*env;
 
@@ -30,7 +30,7 @@ t_hist			*get_last_hist(void)
 	return (env->last);
 }
 
-void			store(void *ptr, int type, size_t size, size_t rsize)
+void			ft_store(void *ptr, int type, size_t size, size_t rsize)
 {
 	t_hist *last;
 
