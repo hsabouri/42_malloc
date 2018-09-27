@@ -3,78 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/03 13:49:18 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/29 17:04:51 by hsabouri         ###   ########.fr       */
+/*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
+/*   Updated: 2018/09/27 10:35:16 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include <malloc.h>
 
-t_pool			*ft_setpool(size_t memsize, size_t sbucket)
+t_state			g_state = (t_state) {NULL, NULL, NULL, NULL};
+
+static t_bucket	create_bucket(t_uint bucketsize, void *ptr)
 {
-	t_pool	*pool;
+	t_bucket res;
+
+	res.size = 0;
+	res.max = bucketsize;
+	res.ptr = ptr;
+	return (res);
+}
+
+t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
+{
+	void	*memory;
+	t_pool	*res;
 	size_t	i;
 
-	pool = (t_pool *)MMAP(sizeof(t_pool));
-	if (!pool)
+	if (!(memory = a_mmap(bucketsize * bucketnumber + sizeof(t_pool))))
 		return (NULL);
-	pool->next = NULL;
-	pool->content = (t_bucket *)MMAP(sizeof(t_bucket) * BUCKETS);
-	pool->last = 0;
-	pool->size = memsize;
-	pool->nbuckets = (sbucket > SMALL) ? 1 : BUCKETS;
-	pool->sbucket = sbucket;
-	pool->mem = (void *)MMAP(memsize);
+	res = memory;
+	res->bucketsize = bucketsize;
+	res->bucketnumber = bucketnumber;
+	res->edge = 0;
+	res->mem = memory + sizeof(t_pool);
 	i = 0;
-	while (i < BUCKETS)
+	while (i < bucketnumber)
 	{
-		pool->content[i].mem = pool->mem + i * sbucket;
-		pool->content[i].size = 0;
-		pool->content[i].max = sbucket;
+		res->buckets[i] = create_bucket(bucketsize, i * bucketsize + res->mem);
 		i++;
 	}
-	return (pool);
+	res->next = NULL;
+	return (res);
 }
 
-size_t			ft_poolsize(size_t size)
+t_large_pool	*create_large_pool(size_t size)
 {
-	size_t			pagesize;
-	size_t			overflow;
-	struct rlimit	vms;
+	void			*memory;
+	size_t			allocated_size;
+	t_large_pool	*res;
 
-	getrlimit(RLIMIT_AS, &vms);
-	if (size >= vms.rlim_cur)
-		return (0);
-	pagesize = getpagesize();
-	overflow = size % pagesize;
-	if (overflow == 0)
-		return (size);
+	allocated_size = get_alloc_size(size + sizeof(t_large_pool));
+	if (!(memory = a_mmap(size + sizeof(t_large_pool))))
+		return (NULL);
+	res = memory;
+	res->allocated = allocated_size - sizeof(t_large_pool);
+	res->current = size;
+	res->mem = memory + sizeof(t_large_pool);
+	res->next = NULL;
+	return (res);
+}
+
+t_state			*init_state(void)
+{
+	g_state.tiny = create_pool(TINY, REGION_S);
+	g_state.small = create_pool(SMALL, REGION_S);
+	if (g_state.tiny && g_state.small)
+		return (&g_state);
 	else
-		return ((size / pagesize + 1) * pagesize);
+		return (NULL);
 }
 
-static t_env	*ft_setenv(void)
+t_state			*get_state(void)
 {
-	t_env	*env;
-
-	env = (t_env *)MMAP(sizeof(t_env));
-	env->stiny = ft_poolsize(TINY * BUCKETS);
-	env->ssmall = ft_poolsize(SMALL * BUCKETS);
-	env->tiny = ft_setpool(env->stiny, TINY);
-	env->small = ft_setpool(env->ssmall, SMALL);
-	env->large = NULL;
-	env->hist = NULL;
-	env->last = NULL;
-	return (env);
-}
-
-t_env			*ft_getenv(void)
-{
-	static t_env	*env = NULL;
-
-	if (!env)
-		env = ft_setenv();
-	return (env);
+	if (g_state.tiny && g_state.small)
+		return (&g_state);
+	else
+		return (init_state());
 }

@@ -3,74 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   malloc.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/04 16:38:54 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/01/29 17:33:42 by hsabouri         ###   ########.fr       */
+/*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
+/*   Updated: 2018/09/27 10:39:33 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include <malloc.h>
 
-static void	*alloc(t_pool *lst, size_t size)
+void	*allocate(t_pool *pool, size_t size)
 {
-	void	*res;
+	t_bucket	*to_allocate;
 
-	while (lst->next && lst->last == lst->nbuckets)
-		lst = lst->next;
-	if (lst->next == NULL && lst->last == lst->nbuckets)
+	if (pool->edge == pool->bucketnumber)
 	{
-		if (!(lst->next = ft_setpool(lst->size, lst->sbucket)))
-			return (NULL);
-		lst = lst->next;
+		if (!pool->next)
+			pool->next = create_pool(pool->bucketsize, pool->bucketnumber);
+		return (allocate(pool->next, size));
 	}
-	res = lst->content[lst->last].mem;
-	lst->content[lst->last].size = size;
-	lst->last++;
-	ft_store(res, 1, size, lst->sbucket);
-	return (res);
+	to_allocate = pool->buckets + pool->edge;
+	to_allocate->size = size;
+	pool->edge++;
+	return (to_allocate->ptr);
 }
 
-static void	*alloc_large(t_pool **lst, size_t size)
+void	*allocate_large(t_large_pool **pool, size_t size)
 {
-	void	*res;
-	size_t	rsize;
-	t_pool	*new;
-	t_pool	*curr;
-
-	rsize = ft_poolsize(size);
-	if (!rsize || !(new = ft_setpool(rsize, size)))
-		return (NULL);
-	new->last = 1;
-	new->content[0].size = size;
-	if (!*lst)
-		*lst = new;
-	else
-	{
-		curr = *lst;
-		while (curr->next)
-			curr = curr->next;
-		curr->next = new;
-	}
-	res = new->mem;
-	ft_store(res, HIST_ALLOC, size, rsize);
-	return (res);
+	while (*pool != NULL)
+		pool = &((*pool)->next);
+	*pool = create_large_pool(size);
+	return ((*pool)->mem);
 }
 
 void	*malloc(size_t size)
 {
-	t_env	*env;
-	void	*res;
+	t_state	*state;
 
-	ft_putstr("malloc\n");
-	env = ft_getenv();
-	if (!size)
+	if (size == 0)
 		return (NULL);
+	state = get_state();
 	if (size <= TINY)
-		res = alloc(env->tiny, size);
+		return (allocate(state->tiny, size));
 	else if (size <= SMALL)
-		res = alloc(env->small, size);
+		return (allocate(state->small, size));
 	else
-		res = alloc_large(&env->large, size);
-	return (res);
+		return (allocate_large(&(state->large), size));
 }

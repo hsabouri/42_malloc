@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hsabouri <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/01/29 17:52:23 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/09/21 16:05:09 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,21 +16,11 @@ endif
 
 NAME = libft_malloc_$(HOSTTYPE).so
 CFLAGS = -Wall -Wextra -I$(INCDIR)
-CFLAGS += -Werror
+#CFLAGS += -Werror
 CFLAGS += -g #-fsanitize=address
 CC = clang
 SRCDIR = sources
-SRCS = init.c\
-	   history.c\
-	   free.c\
-	   malloc.c\
-	   realloc.c\
-	   show_alloc_mem.c\
-	   search.c\
-	   display.c\
-	   display2.c\
-	   history.c\
-	   tools.c
+SRCS = init.c mmap.c malloc.c
 
 SRC = $(SRCS:%.c=$(SRCDIR)/%.c)
 TESTS = main.c
