@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/09/27 10:40:05 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/09/28 16:16:03 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 # include <sys/time.h>
 # include <sys/resource.h>
 
-# define TINY 512
-# define SMALL 2048
-# define REGION_S 1024
+# define TINY 32
+# define SMALL 64
+# define REGION_S 10
 
 # define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
@@ -67,7 +67,7 @@ t_state					*get_state(void);
 
 void					*malloc(size_t size);
 void					*realloc(void *ptr, size_t size);
-void					*free(void *ptr);
+void					free(void *ptr);
 void					show_alloc_mem();
 
 #endif

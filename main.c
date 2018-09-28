@@ -2,19 +2,19 @@
 
 int	main(void)
 {
-	printf("Test of maxing out TINY pools:\n");
-	for (int i = 0; i < 10000; i++) {
-		printf("%zu - ", (size_t)malloc(TINY));
+	void *ptr;
+
+	for (int i = 0; i < 250; i++) {
+		ptr = malloc(TINY);
 	}
-	printf("\n");
-	printf("Test of maxing out SMALL pools:\n");
-	for (int i = 0; i < 10000; i++) {
-		printf("%zu - ", (size_t)malloc(SMALL));
+	for (int i = 0; i < 1200; i++) {
+		ptr = malloc(TINY);
+		free(ptr);
 	}
-	printf("\n");
-	printf("Test of maxing out LARGE pools:\n");
-	for (int i = 0; i < 10; i++) {
-		printf("%zu - ", (size_t)malloc(10000));
+	for (int i = 0; i < 1000; i++) {
+		ptr = malloc(TINY);
+		free(ptr);
 	}
+	free(NULL);
 	return (0);
 }

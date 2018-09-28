@@ -6,13 +6,13 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/09/27 10:35:16 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/09/28 16:09:18 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <malloc.h>
 
-t_state			g_state = (t_state) {NULL, NULL, NULL, NULL};
+t_state			g_state = (t_state) {NULL, NULL, NULL};
 
 static t_bucket	create_bucket(t_uint bucketsize, void *ptr)
 {
