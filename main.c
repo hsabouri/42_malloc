@@ -3,18 +3,18 @@
 int	main(void)
 {
 	void *ptr;
-
-	for (int i = 0; i < 250; i++) {
-		ptr = malloc(TINY);
-	}
-	for (int i = 0; i < 1200; i++) {
-		ptr = malloc(TINY);
-		free(ptr);
-	}
-	for (int i = 0; i < 1000; i++) {
-		ptr = malloc(TINY);
-		free(ptr);
-	}
-	free(NULL);
+	void *to_free;
+	
+	ptr = malloc(1000);
+	ptr = malloc(1000);
+	free(ptr);
+	ptr = malloc(1000);
+	ptr = malloc(1000);
+	to_free = malloc(1000);
+	ptr = malloc(1000);
+	ptr = malloc(1000);
+	ptr = malloc(1000);
+	free(to_free);
+	free(ptr);
 	return (0);
 }
