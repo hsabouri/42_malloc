@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/09/30 14:43:33 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/02 11:17:32 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
 	t_pool	*res;
 	size_t	i;
 
-	if (!(memory = a_mmap(bucketsize * bucketnumber + sizeof(t_pool))))
+	if (!(memory = sysalloc(bucketsize * bucketnumber + sizeof(t_pool))))
 		return (NULL);
 	res = memory;
 	res->bucketsize = bucketsize;
@@ -54,7 +54,7 @@ t_large_pool	*create_large_pool(size_t size)
 	t_large_pool	*res;
 
 	allocated_size = get_alloc_size(size + sizeof(t_large_pool));
-	if (!(memory = a_mmap(size + sizeof(t_large_pool))))
+	if (!(memory = sysalloc(size + sizeof(t_large_pool))))
 		return (NULL);
 	res = memory;
 	res->allocated = allocated_size - sizeof(t_large_pool);

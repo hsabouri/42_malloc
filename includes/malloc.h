@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/09/30 19:20:08 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/02 11:28:09 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define SMALL 64
 # define REGION_S 5
 
-# define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
+# define ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
 typedef	unsigned int	t_uint;
 
@@ -58,7 +58,7 @@ typedef struct			s_state
 }						t_state;
 
 size_t					get_alloc_size(size_t size);
-void					*a_mmap(size_t size);
+void					*sysalloc(size_t size);
 
 t_pool					*create_pool(t_uint bucketsize, t_uint bucketnumber);
 t_large_pool			*create_large_pool(size_t size);
