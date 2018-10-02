@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:28:12 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/02 11:46:50 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	*malloc(size_t size)
 {
 	t_state	*state;
 
+	ft_putstr("SUCCESS MALLOC");
 	if (size == 0)
 		return (NULL);
 	state = get_state();

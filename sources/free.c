@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 11:10:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:29:06 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/02 11:47:25 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ long			get_bucket_position(t_pool *pool, void *ptr)
 	unsigned int i;
 
 	i = 0;
-	ft_putstr("		SEARCHING BUCKET\n");
 	while (i <= pool->edge)
 	{
 		if (pool->buckets[i].ptr == ptr)
@@ -62,10 +61,8 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 	if (ptr >= (*pool)->mem && ptr < (*pool)->mem + relative)
 	{
 		position = get_bucket_position(*pool, ptr);
-		ft_putstr("		FOUND");
 		if (position == -1 || (*pool)->buckets[position].size == 0)
 		{
-			ft_putstr(" BUT INVALID\n");
 			return (NULL);
 		}
 		(*pool)->buckets[position].size = 0;
@@ -73,12 +70,10 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 		(*pool)->buckets[position] = (*pool)->buckets[(*pool)->edge];
 		(*pool)->buckets[(*pool)->edge] = tmp_bucket;
 		(*pool)->edge--;
-		ft_putstr(" AND FREED\n");
 		if (flush)
 			flush_pool(pool);
 		return (ptr);
 	}
-	ft_putstr("	NEXT POOL\n");
 	return (search_and_free(&(*pool)->next, ptr, 1));
 }
 
@@ -102,6 +97,7 @@ void			free(void *ptr)
 {
 	t_state	*state;
 
+	ft_putstr("SUCCESS FREE");
 	if (ptr == NULL)
 		return ;
 	state = get_state();

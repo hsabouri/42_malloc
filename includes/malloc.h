@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:28:09 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/02 11:47:28 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,9 @@ void					*malloc(size_t size);
 void					*realloc(void *ptr, size_t size);
 void					free(void *ptr);
 void					show_alloc_mem();
+
+
+
+void	ft_putstr(char *str);
 
 #endif
