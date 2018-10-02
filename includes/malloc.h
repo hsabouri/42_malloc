@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/09/28 16:16:03 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/09/30 19:20:08 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define TINY 32
 # define SMALL 64
-# define REGION_S 10
+# define REGION_S 5
 
 # define MMAP_ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
