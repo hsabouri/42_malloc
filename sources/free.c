@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 11:10:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:47:25 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/07 15:03:32 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 	{
 		position = get_bucket_position(*pool, ptr);
 		if (position == -1 || (*pool)->buckets[position].size == 0)
-		{
 			return (NULL);
-		}
 		(*pool)->buckets[position].size = 0;
 		tmp_bucket = (*pool)->buckets[position];
 		(*pool)->buckets[position] = (*pool)->buckets[(*pool)->edge];
