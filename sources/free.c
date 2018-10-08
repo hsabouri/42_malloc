@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 11:10:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/07 15:03:32 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/08 16:33:35 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_putstr(char *str)
 	len = 0;
 	while (str[len])
 		len++;
-	write(0, str, len);
+	write(1, str, len);
 }
 
 void			flush_pool(t_pool **pool)
@@ -56,7 +56,10 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 	t_bucket	tmp_bucket;
 
 	if ((*pool) == NULL)
+	{
+		ft_putstr("	NEXT POOLSET\n");
 		return (NULL);
+	}
 	relative = (*pool)->bucketnumber * (*pool)->bucketsize;
 	if (ptr >= (*pool)->mem && ptr < (*pool)->mem + relative)
 	{
@@ -70,8 +73,10 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 		(*pool)->edge--;
 		if (flush)
 			flush_pool(pool);
+		ft_putstr("	FOUND\n");
 		return (ptr);
 	}
+	ft_putstr("	NEXTPOOL\n");
 	return (search_and_free(&(*pool)->next, ptr, 1));
 }
 
@@ -86,6 +91,7 @@ void			*search_and_free_large(t_large_pool **pool, void *ptr)
 		to_free = *pool;
 		*pool = to_free->next;
 		munmap(to_free, sizeof(t_large_pool) + to_free->allocated);
+		ft_putstr("	FOUND LARGE\n");
 		return (ptr);
 	}
 	return (search_and_free_large(&((*pool)->next), ptr));
@@ -95,15 +101,20 @@ void			free(void *ptr)
 {
 	t_state	*state;
 
-	ft_putstr("SUCCESS FREE");
+	ft_putstr("FREE\n");
 	if (ptr == NULL)
+	{
+		ft_putstr("	NULL\n");
 		return ;
-	state = get_state();
+	}
+	if ((state = get_state()) == NULL)
+		return ;
+	pthread_mutex_lock(&state->mutex);
 	if (search_and_free(&state->tiny, ptr, 0) != NULL)
-		return ;
+		pthread_mutex_unlock(&state->mutex);
 	else if (search_and_free(&state->small, ptr, 0) != NULL)
-		return ;
+		pthread_mutex_unlock(&state->mutex);
 	else if (search_and_free_large(&state->large, ptr) != NULL)
-		return ;
-	return ;
+		pthread_mutex_unlock(&state->mutex);
+	pthread_mutex_unlock(&state->mutex);
 }

@@ -6,13 +6,13 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:17:32 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/08 17:52:49 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <malloc.h>
 
-t_state			g_state = (t_state) {NULL, NULL, NULL};
+t_state			g_state = (t_state) {NULL, NULL, NULL, {}};
 
 static t_bucket	create_bucket(t_uint bucketsize, void *ptr)
 {
@@ -29,14 +29,16 @@ t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
 	void	*memory;
 	t_pool	*res;
 	size_t	i;
+	size_t	data_size;
 
-	if (!(memory = sysalloc(bucketsize * bucketnumber + sizeof(t_pool))))
+	data_size = sizeof(t_pool);
+	if (!(memory = sysalloc(bucketsize * bucketnumber + data_size + ALIGN - 1)))
 		return (NULL);
 	res = memory;
 	res->bucketsize = bucketsize;
 	res->bucketnumber = bucketnumber;
 	res->edge = 0;
-	res->mem = memory + sizeof(t_pool);
+	res->mem = memory + data_size + (ALIGN - (size_t)(memory + data_size) % ALIGN);
 	i = 0;
 	while (i < bucketnumber)
 	{
@@ -52,14 +54,16 @@ t_large_pool	*create_large_pool(size_t size)
 	void			*memory;
 	size_t			allocated_size;
 	t_large_pool	*res;
+	size_t			data_size;
 
-	allocated_size = get_alloc_size(size + sizeof(t_large_pool));
-	if (!(memory = sysalloc(size + sizeof(t_large_pool))))
+	data_size = sizeof(t_large_pool);
+	allocated_size = get_alloc_size(size + data_size);
+	if (!(memory = sysalloc(size + data_size + ALIGN - 1)))
 		return (NULL);
 	res = memory;
-	res->allocated = allocated_size - sizeof(t_large_pool);
+	res->allocated = allocated_size - data_size;
 	res->current = size;
-	res->mem = memory + sizeof(t_large_pool);
+	res->mem = memory + data_size + (ALIGN - (size_t)(memory + data_size) % ALIGN);
 	res->next = NULL;
 	return (res);
 }
@@ -68,6 +72,8 @@ t_state			*init_state(void)
 {
 	g_state.tiny = create_pool(TINY, REGION_S);
 	g_state.small = create_pool(SMALL, REGION_S);
+	if (pthread_mutex_init(&g_state.mutex, NULL) != 0)
+		return (NULL);
 	if (g_state.tiny && g_state.small)
 		return (&g_state);
 	else

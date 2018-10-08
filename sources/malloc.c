@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:46:50 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/08 16:32:00 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,29 @@ void	*allocate_large(t_large_pool **pool, size_t size)
 void	*malloc(size_t size)
 {
 	t_state	*state;
+	void	*res;
 
-	ft_putstr("SUCCESS MALLOC");
+	ft_putstr("SUCCESS MALLOC\n");
 	if (size == 0)
 		return (NULL);
-	state = get_state();
+	if ((state = get_state()) == NULL)
+		return (NULL);
+	pthread_mutex_lock(&state->mutex);
 	if (size <= TINY)
-		return (allocate(state->tiny, size));
+	{
+		ft_putstr("	TINY\n");
+		res = allocate(state->tiny, size);
+	}
 	else if (size <= SMALL)
-		return (allocate(state->small, size));
+	{
+		ft_putstr("	SMALL\n");
+		res = allocate(state->small, size);
+	}
 	else
-		return (allocate_large(&(state->large), size));
+	{
+		ft_putstr("	LARGE\n");
+		res = allocate_large(&(state->large), size);
+	}
+	pthread_mutex_unlock(&state->mutex);
+	return (res);
 }

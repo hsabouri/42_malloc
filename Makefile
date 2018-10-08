@@ -6,7 +6,7 @@
 #    By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/09/30 15:38:30 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/10/08 13:58:52 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,10 @@ endif
 NAME = libft_malloc_$(HOSTTYPE).so
 CFLAGS = -Wall -Wextra -I$(INCDIR)
 #CFLAGS += -Werror
-CFLAGS += -g -fsanitize=address
+CFLAGS += -g #-fsanitize=address
 CC = clang
 SRCDIR = sources
-SRCS = init.c mmap.c malloc.c free.c
+SRCS = init.c mmap.c malloc.c free.c realloc.c calloc.c
 
 SRC = $(SRCS:%.c=$(SRCDIR)/%.c)
 TESTS = main.c

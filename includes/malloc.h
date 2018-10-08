@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/02 11:47:28 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/08 16:45:52 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@
 # include <sys/mman.h>
 # include <sys/time.h>
 # include <sys/resource.h>
+# include <pthread.h>
 
-# define TINY 32
-# define SMALL 64
-# define REGION_S 5
+# define TINY 8
+# define SMALL 16
+# define REGION_S 512
+# define ALIGN 16
 
 # define ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
@@ -55,6 +57,7 @@ typedef struct			s_state
 	t_pool			*tiny;
 	t_pool			*small;
 	t_large_pool	*large;
+	pthread_mutex_t	mutex;
 }						t_state;
 
 size_t					get_alloc_size(size_t size);
@@ -68,10 +71,11 @@ t_state					*get_state(void);
 void					*malloc(size_t size);
 void					*realloc(void *ptr, size_t size);
 void					free(void *ptr);
+void					*calloc(size_t count, size_t size);
 void					show_alloc_mem();
 
 
 
-void	ft_putstr(char *str);
+void					ft_putstr(char *str);
 
 #endif
