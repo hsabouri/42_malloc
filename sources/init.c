@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/09 10:03:36 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/09 11:02:04 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,21 @@
 
 t_state			g_state = (t_state) {NULL, NULL, NULL, {}};
 
-static t_bucket	create_bucket(t_uint bucketsize, void *ptr)
+static t_bucket	create_bucket(uint32_t index)
 {
 	t_bucket res;
 
-	res.size = 0;
-	res.max = bucketsize;
-	res.ptr = ptr;
+	res.index = index;
+	res.allocated = 0;
 	return (res);
 }
 
-t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
+t_pool			*create_pool(uint32_t bucketsize, uint32_t bucketnumber)
 {
-	void	*memory;
-	t_pool	*res;
-	size_t	i;
-	size_t	data_size;
+	void		*memory;
+	t_pool		*res;
+	uint32_t	i;
+	size_t		data_size;
 
 	data_size = sizeof(t_pool);
 	if (!(memory = sysalloc(bucketsize * bucketnumber + data_size + ALIGN - 1)))
@@ -42,7 +41,7 @@ t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
 	i = 0;
 	while (i < bucketnumber)
 	{
-		res->buckets[i] = create_bucket(bucketsize, i * bucketsize + res->mem);
+		res->buckets[i] = create_bucket(i);
 		i++;
 	}
 	res->next = NULL;
@@ -62,7 +61,6 @@ t_large_pool	*create_large_pool(size_t size)
 		return (NULL);
 	res = memory;
 	res->allocated = allocated_size - data_size;
-	res->current = size;
 	res->mem = (void *)((size_t)(memory + data_size + ALIGN) & MASK);
 	res->next = NULL;
 	return (res);

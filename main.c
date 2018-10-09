@@ -1,48 +1,40 @@
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 
 int	main(void)
 {
 	void *ptr;
-	void *to_free[10];
-	
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
+	void *otherptr;
 
-	to_free[0] = malloc(10);
-	to_free[1] = malloc(10);
-	to_free[2] = malloc(10);
-	to_free[3] = malloc(10);
-	to_free[4] = malloc(10);
-	to_free[5] = malloc(10);
-	to_free[6] = malloc(10);
-	to_free[7] = malloc(10);
-	to_free[8] = malloc(10);
-	to_free[9] = malloc(10);
-
-	ptr = malloc(10);
-	ptr = malloc(10);
-	ptr = malloc(10);
-
-	free(to_free[0]);
-	free(to_free[5]);
-	free(to_free[1]);
-	free(to_free[8]);
-	free(to_free[3]);
-	free(ptr);
-	free(to_free[4]);
-	free(to_free[6]);
-	free(to_free[7]);
-	free(to_free[2]);
-	free(to_free[9]);
-
-
+	write(1, "\n", 1);
+	write(1, "\n", 1);
+	write(1, "\n", 1);
+	write(1, "\n", 1);
+	write(1, "\n", 1);
+	ptr = malloc(16);
+	strcpy(ptr, "Hello !\n");
+	write(1, (char *)ptr, 10);
+	ptr = realloc(ptr, 5000);
+	write(1, (char *)ptr, 10);
+	/*
+	for (int i = 0; i < 2789; i++) {
+		ptr = malloc(16);
+		strcpy(ptr, "Hello !");
+		printf("%s\n", (char *)ptr);
+	}
+	otherptr = ptr;
+	for (int i = 0; i < 2789; i++) {
+		ptr = malloc(16);
+		strcpy(ptr, "Hello !");
+		printf("%s\n", (char *)ptr);
+	}
+	otherptr = realloc(otherptr, 5000);
+	printf("%s\n", (char *)otherptr);
+	ptr = realloc(ptr, 5000);
+	printf("%s\n", (char *)ptr);
+	otherptr = realloc(otherptr, 10000);
+	printf("%s\n", (char *)otherptr);
+	*/
 	return (0);
 }

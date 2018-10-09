@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/08 16:32:00 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/09 17:14:18 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ void	*allocate(t_pool *pool, size_t size)
 		return (allocate(pool->next, size));
 	}
 	to_allocate = pool->buckets + pool->edge;
-	to_allocate->size = size;
 	pool->edge++;
-	return (to_allocate->ptr);
+	return (to_allocate->index * pool->bucketsize + pool->mem);
 }
 
 void	*allocate_large(t_large_pool **pool, size_t size)
@@ -36,32 +35,41 @@ void	*allocate_large(t_large_pool **pool, size_t size)
 	return ((*pool)->mem);
 }
 
+void	*malloc_locked(size_t size)
+{
+	t_state	*state;
+	void	*res;
+
+	if (size == 0)
+		return (NULL);
+	if ((state = get_state()) == NULL)
+		return (NULL);
+	if (size <= TINY)
+		res = allocate(state->tiny, size);
+	else if (size <= SMALL)
+		res = allocate(state->small, size);
+	else
+		res = allocate_large(&(state->large), size);
+	return (res);
+}
+
 void	*malloc(size_t size)
 {
 	t_state	*state;
 	void	*res;
 
-	ft_putstr("SUCCESS MALLOC\n");
+	ft_putstr("MALLOC\n");
 	if (size == 0)
 		return (NULL);
 	if ((state = get_state()) == NULL)
 		return (NULL);
 	pthread_mutex_lock(&state->mutex);
 	if (size <= TINY)
-	{
-		ft_putstr("	TINY\n");
 		res = allocate(state->tiny, size);
-	}
 	else if (size <= SMALL)
-	{
-		ft_putstr("	SMALL\n");
 		res = allocate(state->small, size);
-	}
 	else
-	{
-		ft_putstr("	LARGE\n");
 		res = allocate_large(&(state->large), size);
-	}
 	pthread_mutex_unlock(&state->mutex);
 	return (res);
 }
