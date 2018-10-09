@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/08 16:45:52 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/09 09:59:57 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 # include <sys/resource.h>
 # include <pthread.h>
 
-# define TINY 8
-# define SMALL 16
+# define TINY 16
+# define SMALL 32
 # define REGION_S 512
 # define ALIGN 16
+# define MASK ~(size_t)(ALIGN - 1)
 
 # define ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
