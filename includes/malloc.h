@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/09 09:59:57 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/09 10:03:22 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define SMALL 32
 # define REGION_S 512
 # define ALIGN 16
-# define MASK ~(size_t)(ALIGN - 1)
+# define MASK ~(uintptr_t)(ALIGN - 1)
 
 # define ARGS 0x01|0x02,0x1000|0x0002,-1,0
 
