@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 11:10:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/09 17:14:03 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/14 15:23:04 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ void			flush_pool(t_pool **pool)
 	{
 		tmp_pool = *pool;
 		(*pool) = (*pool)->next;
-		munmap(tmp_pool,
-			tmp_pool->bucketnumber * tmp_pool->bucketsize + sizeof(t_pool));
+		munmap(tmp_pool, tmp_pool->bucketnumber *
+			tmp_pool->bucketsize + sizeof(t_pool) + ALIGN - 1);
 	}
+	ft_putstr(" and flushed pool");
 }
 
 void			free_bucket(t_pool *pool, uint32_t position)
@@ -30,6 +31,8 @@ void			free_bucket(t_pool *pool, uint32_t position)
 	t_bucket	tmp_bucket;
 
 	pool->buckets[position].allocated = 0;
+	*((char *)(pool->mem +
+		pool->buckets[position].index * pool->bucketsize)) = 0;
 	tmp_bucket = pool->buckets[position];
 	pool->buckets[position] = pool->buckets[pool->edge];
 	pool->buckets[pool->edge] = tmp_bucket;
@@ -41,6 +44,8 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 	int64_t		position;
 	size_t		relative;
 
+	ft_putstr(" pool: ");
+	ft_putlong((size_t)(*pool));
 	if ((*pool) == NULL)
 		return (NULL);
 	relative = (*pool)->bucketnumber * (*pool)->bucketsize;
@@ -48,8 +53,12 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 	{
 		position = get_bucket_position(*pool, ptr);
 		if (position < 0 || (*pool)->buckets[position].allocated == 0)
+		{
+			ft_putstr(" unsuccessfully (invalid)");
 			return (NULL);
+		}
 		free_bucket(*pool, (uint32_t)position);
+		ft_putstr(" successfully");
 		if (flush)
 			flush_pool(pool);
 		return (ptr);
@@ -77,9 +86,13 @@ void			free(void *ptr)
 {
 	t_state	*state;
 
-	ft_putstr("FREE\n");
+	ft_putstr("FREE at ");
+	ft_putlong((long)ptr);
 	if (ptr == NULL)
+	{
+		ft_putstr("unsucessfully (null)\n");
 		return ;
+	}
 	if ((state = get_state()) == NULL)
 		return ;
 	pthread_mutex_lock(&state->mutex);
@@ -91,4 +104,5 @@ void			free(void *ptr)
 		pthread_mutex_unlock(&state->mutex);
 	else
 		pthread_mutex_unlock(&state->mutex);
+	ft_putstr("\n");
 }

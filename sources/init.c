@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/09 11:02:04 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/14 14:16:19 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_pool			*create_pool(uint32_t bucketsize, uint32_t bucketnumber)
 	res->bucketnumber = bucketnumber;
 	res->edge = 0;
 	res->mem = (void *)((uintptr_t)(memory + data_size + ALIGN) & MASK);
+	
 	i = 0;
 	while (i < bucketnumber)
 	{
@@ -56,12 +57,13 @@ t_large_pool	*create_large_pool(size_t size)
 	size_t			data_size;
 
 	data_size = sizeof(t_large_pool);
-	allocated_size = get_alloc_size(size + data_size);
+	allocated_size = get_alloc_size(size + data_size + ALIGN - 1);
 	if (!(memory = sysalloc(size + data_size + ALIGN - 1)))
 		return (NULL);
 	res = memory;
-	res->allocated = allocated_size - data_size;
+	res->allocated = allocated_size - data_size - ALIGN + 1;
 	res->mem = (void *)((size_t)(memory + data_size + ALIGN) & MASK);
+	((char *)res->mem)[size] = 0;
 	res->next = NULL;
 	return (res);
 }

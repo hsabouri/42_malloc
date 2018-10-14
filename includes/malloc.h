@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/09 17:11:33 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/14 12:53:50 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,22 @@
 # include <sys/time.h>
 # include <sys/resource.h>
 # include <pthread.h>
-
+# include <stdlib.h>
+# include <string.h>
 # include <string.h>
 
-# define TINY 16
-# define SMALL 32
+
+
+
+# define TINY 128
+# define SMALL 512
 # define REGION_S 512
 
 # define ALIGN 16
 # define MASK ~(uintptr_t)(ALIGN - 1)
 
 # define ARGS 0x01|0x02,0x1000|0x0002,-1,0
-# define MIN(a,b) ((a >= b) ? (b) : (a))
+# define MIN(a,b) ((a > b) ? (b) : (a))
 
 typedef struct		s_bucket
 {
@@ -71,15 +75,20 @@ t_state				*init_state(void);
 t_state				*get_state(void);
 long				get_bucket_position(t_pool *pool, void *ptr);
 
-void				*malloc(size_t size);
-void				*malloc_locked(size_t size);
-void				*realloc(void *ptr, size_t size);
-void				free(void *ptr);
-void				*calloc(size_t count, size_t size);
+extern void				*malloc(size_t size);
+extern void				*malloc_locked(size_t size);
+extern void				*realloc(void *ptr, size_t size);
+extern void				free(void *ptr);
+extern void				*calloc(size_t count, size_t size);
 void				show_alloc_mem();
+
+extern void *valloc(size_t s);
+extern void *reallocf(void *addr, size_t size);
 
 void				free_bucket(t_pool *pool, uint32_t position);
 
 void				ft_putstr(char *str);
+void				ft_putlong(long n);
+void				*ft_memmove(void *dst, const void *src, size_t len);
 
 #endif
