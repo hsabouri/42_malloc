@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/02 10:34:59 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/14 16:14:15 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 16:15:14 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	*move_allocation(t_pool *pool, void *ptr, size_t size, uint32_t pos)
 
 	if ((res = malloc_locked(size)) == NULL)
 		return (NULL);
-	res = ft_memmove(res, ptr, size);
-	//((char *)res)[size] = 0;
+	res = ft_memmove(res, ptr, pool->bucketsize);
+	((char *)res)[size] = 0;
 	free_bucket(pool, pos);
 	return (res);
 }
@@ -71,6 +71,7 @@ void	*search_and_realloc_large(t_large_pool **pool, void *ptr, size_t size)
 			return (NULL);
 		ft_memmove(res, ptr, to_realloc->allocated);
 		munmap(to_realloc, sizeof(t_large_pool) + to_realloc->allocated + ALIGN - 1);
+		((char *)res)[size] = 0;
 		return (res);
 	}
 	return (search_and_realloc_large(&((*pool)->next), ptr, size));
@@ -81,10 +82,6 @@ void	*realloc(void *ptr, size_t size)
 	t_state	*state;
 	void	*res;
 
-	ft_putstr("REALLOC of size ");
-	ft_putlong(size);
-	ft_putstr(" addr : ");
-	ft_putlong((long)ptr);
 	if (ptr == NULL)
 		return (malloc(size));
 	if ((state = get_state()) == NULL)
@@ -99,14 +96,8 @@ void	*realloc(void *ptr, size_t size)
 		pthread_mutex_unlock(&state->mutex);
 	else
 	{
-		ft_putstr(" with malloc locked");
 		res = malloc_locked(size);
 		pthread_mutex_unlock(&state->mutex);
 	}
-	ft_putstr(" to ");
-	ft_putlong((long)res);
-	ft_putstr(" with size of ");
-	ft_putlong((long)size);
-	ft_putstr("\n");
 	return (res);
 }

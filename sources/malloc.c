@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/14 13:13:28 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 16:14:51 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	*malloc_locked(size_t size)
 
 	if (size < TINY)
 		size = TINY;
-
 	if ((state = get_state()) == NULL)
 		return (NULL);
 	if (size < TINY)
@@ -61,10 +60,8 @@ void	*malloc(size_t size)
 	t_state	*state;
 	void	*res;
 
-	ft_putstr("MALLOC size of ");
-	ft_putlong((long)size);
-	if (size < TINY)
-		size = TINY;
+	if (size < TINY - 1)
+		size = TINY - 1;
 	if ((state = get_state()) == NULL)
 		return (NULL);
 	pthread_mutex_lock(&state->mutex);
@@ -75,8 +72,5 @@ void	*malloc(size_t size)
 	else
 		res = allocate_large(&(state->large), size);
 	pthread_mutex_unlock(&state->mutex);
-	ft_putstr(" at ");
-	//ft_putlong((long)res);
-	ft_putstr("\n");
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 15:21:09 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/14 12:55:50 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 11:40:10 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ size_t	get_alloc_size(size_t size)
 		return ((size / pagesize) * pagesize + pagesize);
 }
 
-void	ft_putstr(char *str)
+void	ft_putstr(char const *str)
 {
 	size_t i = 0;
 
@@ -100,11 +100,14 @@ void	ft_putlong(long n)
     }
   else
     {
-      fin = n % 10;
-      debut = n / 10;
+      fin = n % 16;
+      debut = n / 16;
       if (debut != 0)
 		ft_putlong(debut);
-		current = fin + '0';
+		if (fin < 10)
+			current = fin + '0';
+		else
+			current = fin - 10 + 'a';
 		write(1, &current, 1);
     }
 }
