@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/02 10:34:59 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:36:42 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 17:55:50 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,6 @@ void	*realloc(void *ptr, size_t size)
 	else if ((res = search_and_realloc_large(&state->large, ptr, size)) !=
 	NULL)
 		pthread_mutex_unlock(&state->mutex);
-	else
-	{
-		res = malloc_locked(size);
-		pthread_mutex_unlock(&state->mutex);
-	}
+	pthread_mutex_unlock(&state->mutex);
 	return (res);
 }
