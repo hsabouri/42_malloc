@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/14 14:16:19 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 16:38:31 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_state			g_state = (t_state) {NULL, NULL, NULL, {}};
 
-static t_bucket	create_bucket(uint32_t index)
+static t_bucket	create_bucket(t_uint index)
 {
 	t_bucket res;
 
@@ -23,11 +23,11 @@ static t_bucket	create_bucket(uint32_t index)
 	return (res);
 }
 
-t_pool			*create_pool(uint32_t bucketsize, uint32_t bucketnumber)
+t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
 {
 	void		*memory;
 	t_pool		*res;
-	uint32_t	i;
+	t_uint	i;
 	size_t		data_size;
 
 	data_size = sizeof(t_pool);

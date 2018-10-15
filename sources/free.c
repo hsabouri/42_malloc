@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 11:10:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:13:48 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 16:37:02 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void			flush_pool(t_pool **pool)
 	}
 }
 
-void			free_bucket(t_pool *pool, uint32_t position)
+void			free_bucket(t_pool *pool, t_uint position)
 {
 	t_bucket	tmp_bucket;
 
@@ -39,7 +39,7 @@ void			free_bucket(t_pool *pool, uint32_t position)
 
 void			*search_and_free(t_pool **pool, void *ptr, int flush)
 {
-	int64_t		position;
+	t_int		position;
 	size_t		relative;
 
 	if ((*pool) == NULL)
@@ -50,7 +50,7 @@ void			*search_and_free(t_pool **pool, void *ptr, int flush)
 		position = get_bucket_position(*pool, ptr);
 		if (position < 0 || (*pool)->buckets[position].allocated == 0)
 			return (NULL);
-		free_bucket(*pool, (uint32_t)position);
+		free_bucket(*pool, (t_uint)position);
 		if (flush)
 			flush_pool(pool);
 		return (ptr);

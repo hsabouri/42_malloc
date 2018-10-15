@@ -6,13 +6,13 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/02 10:34:59 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:15:14 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 16:36:42 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <malloc.h>
 
-void	*move_allocation(t_pool *pool, void *ptr, size_t size, uint32_t pos)
+void	*move_allocation(t_pool *pool, void *ptr, size_t size, t_uint pos)
 {
 	void	*res;
 
@@ -27,7 +27,7 @@ void	*move_allocation(t_pool *pool, void *ptr, size_t size, uint32_t pos)
 void	*search_and_realloc(t_pool **pool, void *ptr, size_t size, int flush)
 {
 	void		*res;
-	int64_t		position;
+	t_int		position;
 	size_t		relative;
 
 	if ((*pool) == NULL)
@@ -43,7 +43,7 @@ void	*search_and_realloc(t_pool **pool, void *ptr, size_t size, int flush)
 			((char *)ptr)[size] = 0;
 			return (ptr);
 		}
-		res = move_allocation(*pool, ptr, size, (uint32_t)position);
+		res = move_allocation(*pool, ptr, size, (t_uint)position);
 		if (flush)
 			flush_pool(pool);
 		return (res);

@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 15:21:09 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 11:40:10 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/15 16:37:18 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void	ft_putstr(char const *str)
 	write(1, str, i);
 }
 
-long	get_bucket_position(t_pool *pool, void *ptr)
+t_int	get_bucket_position(t_pool *pool, void *ptr)
 {
-	long i;
+	t_int i;
 
 	if ((ptr - pool->mem) % pool->bucketsize != 0)
 		return (-1);
