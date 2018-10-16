@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 17:26:23 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 09:57:50 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <stdlib.h>
 # include <string.h>
 
-# define TINY 16
+# define TINY 128
 # define SMALL 1040
 # define REGION_S 1024
 

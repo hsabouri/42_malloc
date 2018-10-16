@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:38:31 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 09:47:56 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,9 @@ t_large_pool	*create_large_pool(size_t size)
 
 t_state			*init_state(void)
 {
-	g_state.tiny = create_pool(TINY, REGION_S);
-	g_state.small = create_pool(SMALL, REGION_S);
 	if (pthread_mutex_init(&g_state.mutex, NULL) != 0)
 		return (NULL);
-	if (g_state.tiny && g_state.small)
-		return (&g_state);
-	else
-		return (NULL);
+	return (&g_state);
 }
 
 t_state			*get_state(void)

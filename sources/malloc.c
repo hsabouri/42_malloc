@@ -6,13 +6,13 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:14:51 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 10:22:10 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <malloc.h>
 
-void	*allocate(t_pool *pool, size_t size)
+static void	*allocate(t_pool *pool, size_t size)
 {
 	t_bucket	*to_allocate;
 
@@ -29,7 +29,7 @@ void	*allocate(t_pool *pool, size_t size)
 	return (to_allocate->index * pool->bucketsize + pool->mem);
 }
 
-void	*allocate_large(t_large_pool **pool, size_t size)
+static void	*allocate_large(t_large_pool **pool, size_t size)
 {
 	while (*pool != NULL)
 		pool = &((*pool)->next);
@@ -37,7 +37,7 @@ void	*allocate_large(t_large_pool **pool, size_t size)
 	return ((*pool)->mem);
 }
 
-void	*malloc_locked(size_t size)
+void		*malloc_locked(size_t size)
 {
 	t_state	*state;
 	void	*res;
@@ -47,15 +47,23 @@ void	*malloc_locked(size_t size)
 	if ((state = get_state()) == NULL)
 		return (NULL);
 	if (size < TINY)
+	{
+		if (!state->tiny)
+			state->tiny = create_pool(TINY, REGION_S);
 		res = allocate(state->tiny, size);
+	}
 	else if (size < SMALL)
+	{
+		if (!state->small)
+			state->small = create_pool(SMALL, REGION_S);
 		res = allocate(state->small, size);
+	}
 	else
 		res = allocate_large(&(state->large), size);
 	return (res);
 }
 
-void	*malloc(size_t size)
+void		*malloc(size_t size)
 {
 	t_state	*state;
 	void	*res;
@@ -66,9 +74,17 @@ void	*malloc(size_t size)
 		return (NULL);
 	pthread_mutex_lock(&state->mutex);
 	if (size < TINY)
+	{
+		if (!state->tiny)
+			state->tiny = create_pool(TINY, REGION_S);
 		res = allocate(state->tiny, size);
+	}
 	else if (size < SMALL)
+	{
+		if (!state->small)
+			state->small = create_pool(SMALL, REGION_S);
 		res = allocate(state->small, size);
+	}
 	else
 		res = allocate_large(&(state->large), size);
 	pthread_mutex_unlock(&state->mutex);
