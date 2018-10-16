@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 11:10:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:37:02 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:09:15 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@ void			free_bucket(t_pool *pool, t_uint position)
 	t_bucket	tmp_bucket;
 
 	pool->buckets[position].allocated = 0;
-	memset(pool->mem + pool->buckets[position].index * pool->bucketsize, 0, pool->bucketsize);
+	memset(pool->mem + \
+		pool->buckets[position].index * pool->bucketsize, 0, pool->bucketsize);
 	tmp_bucket = pool->buckets[position];
+	pool->buckets[position].size = 0;
 	pool->buckets[position] = pool->buckets[pool->edge - 1];
 	pool->buckets[pool->edge - 1] = tmp_bucket;
 	pool->edge--;

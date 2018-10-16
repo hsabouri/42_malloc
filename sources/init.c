@@ -6,13 +6,14 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 13:03:13 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/16 09:47:56 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:17:25 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <malloc.h>
 
-t_state			g_state = (t_state) {NULL, NULL, NULL, {}};
+t_state			g_state = (t_state) {NULL, NULL,\
+	NULL, PTHREAD_MUTEX_INITIALIZER};
 
 static t_bucket	create_bucket(t_uint index)
 {
@@ -20,6 +21,7 @@ static t_bucket	create_bucket(t_uint index)
 
 	res.index = index;
 	res.allocated = 0;
+	res.size = 0;
 	return (res);
 }
 
@@ -27,7 +29,7 @@ t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
 {
 	void		*memory;
 	t_pool		*res;
-	t_uint	i;
+	t_uint		i;
 	size_t		data_size;
 
 	data_size = sizeof(t_pool);
@@ -38,7 +40,6 @@ t_pool			*create_pool(t_uint bucketsize, t_uint bucketnumber)
 	res->bucketnumber = bucketnumber;
 	res->edge = 0;
 	res->mem = (void *)((uintptr_t)(memory + data_size + ALIGN) & MASK);
-	
 	i = 0;
 	while (i < bucketnumber)
 	{

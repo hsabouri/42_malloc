@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 11:31:24 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/16 09:57:50 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 14:15:28 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct		s_bucket
 {
 	char			allocated;
 	t_uint			index;
+	t_uint			size;
 }					t_bucket;
 
 typedef struct		s_pool
@@ -51,8 +52,8 @@ typedef struct		s_pool
 typedef struct		s_large_pool
 {
 	struct s_large_pool *next;
-	size_t				allocated;
 	void				*mem;
+	size_t				allocated;
 }					t_large_pool;
 
 typedef struct		s_state
@@ -85,7 +86,7 @@ extern void			*valloc(size_t s);
 extern void			*reallocf(void *addr, size_t size);
 
 void				ft_putstr(char const *str);
-void				ft_putlong(long n);
+void				ft_putaddr(size_t n, size_t base);
 void				*ft_memmove(void *dst, const void *src, size_t len);
 
 #endif

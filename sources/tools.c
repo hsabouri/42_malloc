@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 15:21:09 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 16:56:45 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:09:23 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,6 @@ size_t	get_alloc_size(size_t size)
 		return (size);
 	else
 		return ((size / pagesize) * pagesize + pagesize);
-}
-
-void	ft_putstr(char const *str)
-{
-	size_t i = 0;
-
-	while (str[i])
-		i++;
-	write(1, str, i);
 }
 
 t_int	get_bucket_position(t_pool *pool, void *ptr)
@@ -85,29 +76,4 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 		}
 	}
 	return (dst);
-}
-
-void	ft_putlong(long n)
-{
-  long	debut;
-  long	fin;
-  char	current;
-
-  if (n < 0)
-    {
-      write(1, "-", 1);
-      ft_putlong(-n);
-    }
-  else
-    {
-      fin = n % 16;
-      debut = n / 16;
-      if (debut != 0)
-		ft_putlong(debut);
-		if (fin < 10)
-			current = fin + '0';
-		else
-			current = fin - 10 + 'a';
-		write(1, &current, 1);
-    }
 }

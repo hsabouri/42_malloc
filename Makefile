@@ -6,7 +6,7 @@
 #    By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 11:45:07 by hsabouri          #+#    #+#              #
-#    Updated: 2018/10/14 16:21:09 by hsabouri         ###   ########.fr        #
+#    Updated: 2018/10/16 16:09:49 by hsabouri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ CFLAGS = -Wall -Wextra -I$(INCDIR)
 CFLAGS += -g3 #-fsanitize=address
 CC = clang
 SRCDIR = sources
-SRCS = init.c tools.c malloc.c free.c realloc.c calloc.c valloc_reallocf.c
+SRCS = init.c tools.c malloc.c free.c realloc.c calloc.c valloc_reallocf.c\
+	   show_alloc_mem.c lib.c
 
 SRC = $(SRCS:%.c=$(SRCDIR)/%.c)
 TESTS = main.c

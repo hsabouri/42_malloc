@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/02 10:34:59 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/15 17:55:50 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:10:35 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	*search_and_realloc(t_pool **pool, void *ptr, size_t size, int flush)
 		if ((*pool)->bucketsize >= size)
 		{
 			((char *)ptr)[size] = 0;
+			(*pool)->buckets[position].size = size;
 			return (ptr);
 		}
 		res = move_allocation(*pool, ptr, size, (t_uint)position);
@@ -70,7 +71,8 @@ void	*search_and_realloc_large(t_large_pool **pool, void *ptr, size_t size)
 		if ((res = malloc_locked(size)) == NULL)
 			return (NULL);
 		ft_memmove(res, ptr, to_realloc->allocated);
-		munmap(to_realloc, sizeof(t_large_pool) + to_realloc->allocated + ALIGN - 1);
+		munmap(to_realloc,\
+			sizeof(t_large_pool) + to_realloc->allocated + ALIGN - 1);
 		((char *)res)[size] = 0;
 		return (res);
 	}
