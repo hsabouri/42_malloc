@@ -6,7 +6,7 @@
 /*   By: hsabouri <hsabouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/21 14:32:51 by hsabouri          #+#    #+#             */
-/*   Updated: 2018/10/16 11:45:29 by hsabouri         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:44:31 by hsabouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	*allocate(t_pool *pool, size_t size)
 {
 	t_bucket	*to_allocate;
 
+	if (!pool)
+		return (NULL);
 	if (pool->edge == pool->bucketnumber)
 	{
 		if (!pool->next)
@@ -34,7 +36,8 @@ static void	*allocate_large(t_large_pool **pool, size_t size)
 {
 	while (*pool != NULL)
 		pool = &((*pool)->next);
-	*pool = create_large_pool(size);
+	if ((*pool = create_large_pool(size)) == NULL)
+		return (NULL);
 	return ((*pool)->mem);
 }
 
